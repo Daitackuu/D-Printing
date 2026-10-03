@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Masuk — D'Printing</title>
+<link rel="icon" type="image/png" href="../Resources/Images/Web-Logo.png">
+<link rel="apple-touch-icon" href="../Resources/Images/Web-Logo.png">
+<link rel="stylesheet" href="../CSS/style.css">
+</head>
+<body class="auth-page">
+  <!-- dekorasi latar -->
+  <div class="auth-bg" aria-hidden="true">
+    <span class="auth-blob auth-blob-2"></span>
+    <span class="auth-blob auth-blob-3"></span>
+  </div>
+
+  <div class="center-screen">
+    <div class="auth-shell">
+      <!-- Logo besar di atas, nama web di bawahnya -->
+      <a href="home.html" class="auth-brand" aria-label="D'PRINTING — ke Home">
+        <span class="auth-logo-wrap">
+          <img class="auth-logo" src="../Resources/Images/Web-Logo.png" alt="Logo D'Printing" width="104" height="104">
+        </span>
+        <span class="auth-brand-name">D'PRINTING</span>
+        <span class="auth-brand-tag">Print jalan tanpa harus ke counter dulu</span>
+      </a>
+
+      <div class="ticket auth-card">
+        <p class="eyebrow" id="formEyebrow">Masuk</p>
+        <h1 id="formTitle" style="font-size:22px;">Masuk ke akunmu</h1>
+        <p class="sub" style="margin-bottom:18px;">Masuk atau daftar untuk fitur lengkap: chat, komunitas, dan profil. Upload file tetap bisa tanpa akun.</p>
+
+        <form id="loginForm">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="usernamekamu" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false">
+
+          <div id="emailWrap" class="hidden">
+            <label for="emailInput">Email</label>
+            <input type="email" id="emailInput" placeholder="emailkamu@contoh.com" autocomplete="email">
+            <p class="job-meta" style="margin:4px 0 0;">Pakai email aktif — ini jadi email akunmu, jadi kalau lupa password gampang dipulihkan.</p>
+          </div>
+
+          <label for="password">Password</label>
+          <div class="password-field-wrap">
+            <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+            <button type="button" class="password-toggle-btn" id="passwordToggleBtn" aria-label="Tampilkan password">
+              <span id="passwordToggleIcon" class="icon-img" role="img" aria-hidden="true" style="--icon:url('../Resources/Icons/Eye.png')"></span>
+            </button>
+          </div>
+
+          <div id="webIdWrap" class="hidden">
+            <button type="button" class="webid-toggle-btn" id="webIdToggleBtn">
+              <span>Kode Web ID (opsional)</span>
+              <span class="webid-toggle-arrow" id="webIdToggleArrow">▾</span>
+            </button>
+            <div class="webid-collapse" id="webIdCollapse">
+              <input type="text" id="webId" placeholder="Kosongkan jika tidak memiliki Web ID" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="error-msg" id="errMsg"></div>
+
+          <!-- type="submit" + dibungkus <form> di atas -> nge-enter di field
+               manapun di dalam form ini otomatis "klik" tombol ini. -->
+          <button type="submit" class="btn btn-primary btn-block" id="submitBtn" style="margin-top:14px;">Masuk</button>
+        </form>
+
+        <p class="sub" style="text-align:center;margin:16px 0 0;">
+          <span id="toggleText">Belum punya akun?</span>
+          <a href="#" id="toggleMode" style="color:var(--stamp);font-weight:600;text-decoration:none;">Daftar</a>
+        </p>
+      </div>
+
+      <!-- Tombol balik (di bawah kartu form): ke halaman yang baru saja dilihat
+           selain login/daftar; kalau belum ada, ke Home. Diisi script di bawah. -->
+      <a href="home.html" class="auth-upload-btn" id="authBackBtn">
+        <span class="auth-upload-ico"><span class="icon-img" role="img" aria-hidden="true" style="--icon:url('../Resources/Icons/Back.png')"></span></span>
+        <span class="auth-upload-text">
+          <strong id="authBackTitle">Kembali ke Home</strong>
+          <small id="authBackSub">Lihat-lihat dulu — upload file tanpa login juga bisa</small>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Popup WAJIB salin kode pemulihan tamu: muncul saat tombol Masuk / Daftar
+       ditekan kalau perangkat ini masih menyimpan data tamu. Tombol lanjut baru
+       aktif setelah tombol Salin ditekan. -->
+  <div class="modal-backdrop hidden" id="guestCopyModal">
+    <div class="modal-box recovery-box" role="dialog" aria-modal="true" aria-labelledby="guestCopyTitle">
+      <h3 id="guestCopyTitle">Salin kode pemulihan dulu</h3>
+      <p style="margin:0 0 12px;">
+        Kamu punya data tamu di perangkat ini. <b>Salin kode pemulihan ini dulu sebelum <span id="guestCopyAction">masuk</span>.</b>
+        Data tamumu <b>tidak</b> dipindah otomatis — setelah login akan muncul popup untuk menempelkan kode ini
+        dan memindahkannya ke akunmu. Selama belum dipindah, data tamumu tetap tersimpan.
+      </p>
+      <div class="recovery-code-row">
+        <code class="recovery-code" id="guestCodeText">Menyiapkan kode…</code>
+        <button type="button" class="btn btn-primary" id="guestCodeCopyBtn" disabled>Salin</button>
+      </div>
+      <p class="recovery-note is-warn hidden" id="guestCodeWarn"></p>
+      <p class="recovery-note"><b>Jangan dibagikan</b> — siapa pun yang punya kode ini bisa memindahkan data tamumu.</p>
+      <div class="modal-actions" style="margin-top:16px;">
+        <button type="button" class="btn btn-outline" id="guestCopyCancelBtn">Batal</button>
+        <button type="button" class="btn btn-stamp" id="guestCopyContinueBtn" disabled>Salin dulu untuk lanjut</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth } from "../JS/firebase-config.js";
+    import {
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+    import {
+      ensureUserDoc, roleFromWebID, normalizeUsername, isValidUsername, usernameToEmail,
+      rememberAccount, findLoginEmailByUsername, isUsernameTaken, claimUsernameIndex
+    } from "../JS/app.js";
+    import { getRecoveryCode, formatRecoveryCode, backupGuestProfile, getLastBackupError } from "../JS/guest-sync.js";
+    import { deviceHasGuestData, clearRecoverySkip, copyText } from "../JS/guest-gate.js";
+
+    // Kalau ternyata sudah login, tidak perlu lihat form ini lagi.
+    // PENTING: kalau lagi proses submit (daftar/masuk) sendiri, JANGAN
+    // redirect dari sini — biarkan handler submitBtn di bawah yang urus
+    // navigasinya SETELAH ensureUserDoc() selesai. Kalau tidak, ada race
+    // condition: begitu createUserWithEmailAndPassword() bikin sesi baru,
+    // listener ini bisa langsung lompat ke home.html DULUAN sebelum baris
+    // "await ensureUserDoc(cred.user, role, ...)" di bawah sempat jalan —
+    // akibatnya dokumen user kepaksa dibuat home.js dengan role default
+    // "customer", padahal kode Web ID yang diisi seharusnya kasih role
+    // "printer"/"developer". Ini penyebab bug "daftar pakai kode Web ID
+    // tapi kok jadi customer".
+    // Tombol "Kembali" di bawah kartu: halaman terakhir yang dilihat (disimpan
+    // app.js di sessionStorage) selain login/daftar; kalau tidak ada -> Home.
+    (function setupBackButton() {
+      const NAMES = {
+        "home.html": "Home", "upload.html": "Upload", "community.html": "Komunitas",
+        "channel.html": "Channel", "messages.html": "Pesan", "profile.html": "Profil",
+        "job.html": "Detail Pesanan"
+      };
+      let target = "home.html", name = "Home", fromHistory = false;
+      try {
+        const saved = sessionStorage.getItem("dp:lastPage") || "";
+        const file = saved.split("?")[0].toLowerCase();
+        if (NAMES[file]) { target = saved; name = NAMES[file]; fromHistory = true; }
+      } catch (e) { /* pakai Home */ }
+      document.getElementById("authBackBtn").setAttribute("href", target);
+      document.getElementById("authBackTitle").textContent = "Kembali ke " + name;
+      document.getElementById("authBackSub").textContent = fromHistory
+        ? "Balik ke halaman yang baru saja kamu lihat"
+        : "Lihat-lihat dulu — upload file tanpa login juga bisa";
+    })();
+
+    let isSubmitting = false;
+    onAuthStateChanged(auth, (user) => {
+      // Sesi tamu (anonymous, dipakai buat upload tanpa akun) BUKAN login
+      // beneran — jangan dilempar keluar dari form Masuk/Daftar.
+      // ?add=1 = datang dari "Tambah akun lain" (Switch account): sengaja
+      // tetap di sini walau sudah login; akun sekarang aktif sampai berhasil masuk.
+      const addingAccount = new URLSearchParams(window.location.search).get("add") === "1";
+      if (user && !user.isAnonymous && !isSubmitting && !addingAccount) window.location.replace("upload.html");
+    });
+
+    if (new URLSearchParams(window.location.search).get("add") === "1") {
+      document.getElementById("formTitle").textContent = "Tambah akun lain";
+      const subEl = document.querySelector(".auth-card > p.sub");
+      if (subEl) subEl.textContent = "Masuk dengan akun lain. Akunmu yang sekarang tetap aktif sampai login akun baru berhasil.";
+    }
+
+        // Kalau baru saja auto-logout gara-gara akun di-ban developer
+    // (lihat requireAuth() di app.js), tampilkan pesannya di sini.
+    if (new URLSearchParams(window.location.search).get("banned") === "1") {
+      document.getElementById("errMsg").textContent =
+        "Akun kamu diblokir oleh developer. Hubungi Kontak CS kalau ini kesalahan.";
+    }
+    // Sama kayak di atas, tapi buat kasus akunnya DIHAPUS developer lewat
+    // Kelola User (bukan cuma diban) sementara orangnya masih login di tab
+    // ini — requireAuth() nangkep itu real-time, auto-logout, lalu lempar
+    // ke sini dengan ?removed=1. Akun Firebase Auth-nya sendiri masih ada
+    // (client tidak bisa hapus itu), jadi dia tetap bisa Masuk lagi pakai
+    // username+password lama — cuma datanya sudah bersih, jadi dibuatkan
+    // profil baru sebagai role "customer".
+    if (new URLSearchParams(window.location.search).get("removed") === "1") {
+      document.getElementById("errMsg").textContent =
+        "Akun kamu sudah dihapus oleh developer. Silakan Masuk lagi (akan dibuatkan profil baru) atau Daftar akun baru.";
+    }
+
+    let mode = "login"; // atau "signup"
+    const usernameEl = document.getElementById("username");
+    const emailWrap = document.getElementById("emailWrap");
+    const emailInputEl = document.getElementById("emailInput");
+    const passEl = document.getElementById("password");
+    const webIdEl = document.getElementById("webId");
+    const webIdWrap = document.getElementById("webIdWrap");
+    const webIdToggleBtn = document.getElementById("webIdToggleBtn");
+    const webIdCollapse = document.getElementById("webIdCollapse");
+    const webIdToggleArrow = document.getElementById("webIdToggleArrow");
+    const errEl = document.getElementById("errMsg");
+    const submitBtn = document.getElementById("submitBtn");
+    const loginForm = document.getElementById("loginForm");
+    const toggleMode = document.getElementById("toggleMode");
+    const toggleText = document.getElementById("toggleText");
+    const formTitle = document.getElementById("formTitle");
+    const formEyebrow = document.getElementById("formEyebrow");
+    const passwordToggleBtn = document.getElementById("passwordToggleBtn");
+    const passwordToggleIcon = document.getElementById("passwordToggleIcon");
+
+    // ---- tombol show/hide password (ikon doang, tanpa teks) ----
+    // File ikonnya ditaruh di Resources/Icons/ (Eye.png = mata terbuka,
+    // dipakai saat password lagi disembunyikan; Eye-Off.png = mata
+    // tercoret, dipakai saat password lagi ditampilkan sebagai teks).
+    passwordToggleBtn.addEventListener("click", () => {
+      const showing = passEl.type === "text";
+      passEl.type = showing ? "password" : "text";
+      passwordToggleIcon.style.setProperty("--icon", `url('../Resources/Icons/${showing ? "Eye" : "Eye-Off"}.png')`);
+      passwordToggleBtn.setAttribute("aria-label", showing ? "Tampilkan password" : "Sembunyikan password");
+      // Animasi kecil (pop scale + fade) tiap ganti ikon mata, biar
+      // transisinya nggak "patah" — pakai Web Animations API langsung di
+      // elemen-nya jadi tetap mulus walau di-klik cepat berkali-kali
+      // (animasi lama otomatis kegantiin sama yang baru).
+      if (passwordToggleIcon.animate) {
+        passwordToggleIcon.animate(
+          [
+            { transform: "scale(.5) rotate(-8deg)", opacity: 0 },
+            { transform: "scale(1.12) rotate(2deg)", opacity: 1, offset: .7 },
+            { transform: "scale(1) rotate(0deg)", opacity: 1 }
+          ],
+          { duration: 260, easing: "cubic-bezier(.34,1.56,.64,1)" }
+        );
+      }
+    });
+
+    // ---- kolom Web ID: state awal disembunyikan (collapsed), diklik dulu
+    // panahnya baru kolomnya kebuka dengan animasi slide-down ----
+    webIdToggleBtn.addEventListener("click", () => {
+      const isOpen = webIdCollapse.classList.toggle("open");
+      webIdToggleArrow.classList.toggle("open", isOpen);
+    });
+
+    toggleMode.addEventListener("click", (e) => {
+      e.preventDefault();
+      setMode(mode === "login" ? "signup" : "login");
+    });
+
+    // Dipakai baik oleh klik link "Daftar"/"Masuk" DI ATAS, MAUPUN dipanggil
+    // sekali di awal kalau halaman ini dibuka dengan "?mode=signup" di URL
+    // (dipakai tombol "Keluar" di halaman Profil — lihat js/profile.js —
+    // biar orang yang klik Keluar langsung diarahkan ke form Daftar, bukan
+    // form Masuk seperti biasanya).
+    function setMode(next) {
+      mode = next;
+      const isSignup = mode === "signup";
+      formEyebrow.textContent = isSignup ? "Daftar" : "Masuk";
+      formTitle.textContent = isSignup ? "Buat akun baru" : "Masuk ke akunmu";
+      submitBtn.textContent = isSignup ? "Daftar" : "Masuk";
+      toggleText.textContent = isSignup ? "Sudah punya akun?" : "Belum punya akun?";
+      toggleMode.textContent = isSignup ? "Masuk" : "Daftar";
+      webIdWrap.classList.toggle("hidden", !isSignup);
+      emailWrap.classList.toggle("hidden", !isSignup);
+      // Setiap balik ke mode Daftar, kolom Web ID mulai collapsed lagi.
+      webIdCollapse.classList.remove("open");
+      webIdToggleArrow.classList.remove("open");
+      webIdEl.value = "";
+      errEl.textContent = "";
+    }
+
+    if (new URLSearchParams(window.location.search).get("mode") === "signup") {
+      setMode("signup");
+    }
+
+    function friendlyError(code) {
+      const map = {
+        "auth/user-not-found": "Username belum terdaftar.",
+        "username-mismatch": "Username belum terdaftar.",
+        "auth/wrong-password": "Password salah.",
+        "auth/invalid-credential": "Username atau password salah.",
+        "auth/email-already-in-use": "Email ini sudah dipakai akun lain, pakai email lain atau langsung masuk.",
+        "auth/invalid-email": "Format email tidak valid.",
+        "auth/weak-password": "Password minimal 6 karakter."
+      };
+      return map[code] || "Terjadi kesalahan, coba lagi.";
+    }
+
+    // Dibungkus <form id="loginForm"> di HTML + tombol submitBtn
+    // type="submit" -> nge-enter di field manapun (username/email/
+    // password/webId) otomatis trigger event "submit" ini juga, bukan
+    // cuma pas tombolnya diklik pakai mouse.
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errEl.textContent = "";
+      const isSignup = mode === "signup";
+      const username = normalizeUsername(usernameEl.value);
+      // Kapitalisasi ASLI yang diketik user (mis. "Satya", bukan "satya") —
+      // dipakai buat DISIMPAN & DITAMPILKAN (profil, @username, dsb).
+      // "username" yang sudah di-lowercase di atas TETAP dipakai buat bikin
+      // email palsu Firebase Auth (login/uniqueness harus case-insensitive),
+      // tapi tidak lagi dipakai sebagai teks yang disimpan ke Firestore.
+      const displayUsername = usernameEl.value.trim();
+      const password = passEl.value;
+      const contactEmail = emailInputEl.value.trim();
+
+      if (!username || !password) {
+        errEl.textContent = "Isi username dan password dulu.";
+        return;
+      }
+      if (!isValidUsername(username)) {
+        errEl.textContent = "Username 3-20 karakter: huruf kecil, angka, titik, atau underscore saja.";
+        return;
+      }
+      if (isSignup && !contactEmail) {
+        errEl.textContent = "Isi email kamu dulu.";
+        return;
+      }
+      if (isSignup && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail)) {
+        errEl.textContent = "Format email tidak valid.";
+        return;
+      }
+
+      // Perangkat ini masih punya data tamu -> wajib salin kode pemulihan dulu
+      // lewat popup sebelum proses masuk / daftar dijalankan.
+      if (!(await confirmGuestCodeCopied(isSignup))) return;
+
+      const email = usernameToEmail(username);
+      submitBtn.disabled = true;
+      isSubmitting = true;
+      try {
+        let cred;
+        if (isSignup) {
+          // Cek dulu di index publik "usernames/" (BUKAN cuma andalin
+          // error auth/email-already-in-use dari Firebase Auth) — soalnya
+          // sejak ada fitur rename username (Kelola User, developer),
+          // status "kepakai" username sekarang ditentukan index ini, bukan
+          // cuma email palsu Firebase Auth-nya (lihat catatan lengkap di
+          // js/app.js#renameUsername).
+          const taken = await isUsernameTaken(username);
+          if (taken) {
+            errEl.textContent = "Username sudah dipakai, coba yang lain atau langsung masuk.";
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            return;
+          }
+          // Akun Firebase Auth dibikin pakai EMAIL ASLI user (bukan lagi
+          // email palsu username@dprinting.local), jadi di Firebase Console
+          // > Authentication yang tampil email betulan & reset password
+          // tinggal kirim ke email itu. Login di web tetap pakai USERNAME:
+          // index "usernames/" menyimpan authEmail (email asli ini) buat
+          // dicari pas Masuk.
+          cred = await createUserWithEmailAndPassword(auth, contactEmail, password);
+          const role = roleFromWebID(webIdEl.value);
+          try {
+            // Claim username dulu — kalau ternyata keduluan orang lain
+            // (balapan), batalkan akun yang barusan dibikin biar tidak
+            // ada akun "yatim" tanpa username.
+            await claimUsernameIndex(cred.user.uid, username, cred.user.email);
+          } catch (claimErr) {
+            try { await cred.user.delete(); } catch (_) {}
+            errEl.textContent = "Username sudah dipakai, coba yang lain atau langsung masuk.";
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            return;
+          }
+          await ensureUserDoc(cred.user, role, displayUsername, contactEmail);
+        } else {
+          // Login: cari email asli lewat index "usernames/" dulu (ini yang
+          // bikin username BARU hasil rename developer bisa dipakai login).
+          // Fallback ke rumus lama (usernameToEmail) buat akun LAMA yang
+          // belum sempat ke-index (lihat js/app.js#ensureUserDoc, bagian
+          // migrasi authEmail) — begitu berhasil login lewat fallback itu,
+          // langsung di-backfill (SEKALI SAJA, makanya dicek "!indexedEmail"
+          // dulu — coba claim ulang ke dokumen yang sudah ada bakal ditolak
+          // rules, soalnya usernames/ cuma boleh create atau delete, tidak
+          // boleh update) biar lain kali tidak perlu fallback lagi & sudah
+          // bisa di-rename juga oleh developer.
+          const indexedEmail = await findLoginEmailByUsername(username);
+          cred = await signInWithEmailAndPassword(auth, indexedEmail || email, password);
+          const loginDoc = await ensureUserDoc(cred.user, null, displayUsername);
+          // Pastikan username yang diketik SAMA PERSIS (huruf per huruf,
+          // tidak peduli kapitalisasi) dengan username yang tersimpan di
+          // Firebase (users/{uid}.username) untuk akun yang barusan login.
+          // Beda satu huruf pun = bukan akun ini / belum terdaftar -> tolak
+          // & keluarkan sesinya, jadi profil tidak pernah menampilkan
+          // username yang beda dengan yang ada di Firebase.
+          const storedUsername = normalizeUsername(loginDoc && loginDoc.username);
+          if (!storedUsername || storedUsername !== username) {
+            try { await signOut(auth); } catch (_) {}
+            const err = new Error("username-mismatch");
+            err.code = "username-mismatch";
+            throw err;
+          }
+          if (!indexedEmail) {
+            claimUsernameIndex(cred.user.uid, username, cred.user.email).catch(() => {});
+          }
+        }
+        // Catat username ini di daftar "akun yang diingat" browser ini —
+        // dipakai halaman Profil buat nentuin kapan tombol "Switch akun"
+        // perlu ditampilkan (lihat js/app.js#rememberAccount).
+        rememberAccount(username);
+        // Data tamu di perangkat ini TIDAK dipindah otomatis & TIDAK dihapus.
+        // Kalau perangkat masih menyimpan data tamu dan akun ini masih kosong,
+        // halaman tujuan otomatis memunculkan POPUP Recovery wajib
+        // (guest-gate.js#enforceRecoveryGate) untuk menempelkan kode pemulihan.
+        clearRecoverySkip();
+        window.location.href = "upload.html";
+      } catch (e) {
+        errEl.textContent = friendlyError(e.code);
+        isSubmitting = false;
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    // ---- Popup wajib salin kode pemulihan tamu (saat klik Masuk / Daftar) ----
+    // Kode disiapkan di latar belakang begitu halaman dibuka; popup-nya baru
+    // muncul saat tombol Masuk / Daftar ditekan (lihat confirmGuestCodeCopied).
+    const guestModal = document.getElementById("guestCopyModal");
+    const guestCodeEl = document.getElementById("guestCodeText");
+    const guestCopyBtn = document.getElementById("guestCodeCopyBtn");
+    const guestWarnEl = document.getElementById("guestCodeWarn");
+    const guestCancelBtn = document.getElementById("guestCopyCancelBtn");
+    const guestContinueBtn = document.getElementById("guestCopyContinueBtn");
+    const guestActionEl = document.getElementById("guestCopyAction");
+    let guestCodeCopied = false;   // sudah disalin di sesi halaman ini -> tidak diminta lagi
+
+    (function prepareGuestCode() {
+      if (!deviceHasGuestData()) return;
+      const show = (code) => {
+        guestCodeEl.textContent = formatRecoveryCode(code);
+        guestCopyBtn.disabled = false;
+      };
+      const failHint = () => {
+        const c = getLastBackupError();
+        if (c === "permission-denied") return "Server menolak cadangan — firestore.rules terbaru belum dipublish.";
+        if (c === "auth/operation-not-allowed" || c === "auth/admin-restricted-operation") return "Anonymous Auth belum diaktifkan di Firebase Console.";
+        return "Cadangan terbaru belum bisa dikirim ke cloud (cek koneksi).";
+      };
+
+      const existing = getRecoveryCode();
+      if (existing) show(existing);
+      // Perbarui cadangan cloud supaya kode memuat data terbaru; kalau belum
+      // punya kode, ini juga yang membuatnya.
+      backupGuestProfile().then((ok) => {
+        const code = getRecoveryCode();
+        if (code) show(code);
+        else guestCodeEl.textContent = "Kode belum tersedia";
+        if (!ok && getLastBackupError()) {
+          guestWarnEl.textContent = failHint() + (code ? " Kode ini mungkin belum memuat perubahan terakhir." : "");
+          guestWarnEl.classList.remove("hidden");
+        }
+      });
+    })();
+
+    // Return true kalau boleh lanjut masuk/daftar, false kalau dibatalkan.
+    function confirmGuestCodeCopied(isSignup) {
+      if (!deviceHasGuestData() || guestCodeCopied) return Promise.resolve(true);
+      guestActionEl.textContent = isSignup ? "daftar" : "masuk";
+      guestContinueBtn.textContent = "Salin dulu untuk lanjut";
+      guestContinueBtn.disabled = true;
+      guestModal.classList.remove("hidden");
+
+      return new Promise((resolve) => {
+        const close = (result) => {
+          guestModal.classList.add("hidden");
+          guestCopyBtn.removeEventListener("click", onCopy);
+          guestCancelBtn.removeEventListener("click", onCancel);
+          guestContinueBtn.removeEventListener("click", onContinue);
+          guestModal.removeEventListener("click", onBackdrop);
+          resolve(result);
+        };
+        const onCopy = async () => {
+          const code = getRecoveryCode();
+          if (!code) return;
+          const ok = await copyText(formatRecoveryCode(code));
+          guestCopyBtn.textContent = ok ? "Tersalin ✓" : "Salin manual";
+          setTimeout(() => { guestCopyBtn.textContent = "Salin"; }, 1800);
+          // Tombol lanjut aktif setelah Salin ditekan (kalau clipboard ditolak,
+          // kode tetap bisa diblok & disalin manual dari kotaknya).
+          guestCodeCopied = true;
+          guestContinueBtn.disabled = false;
+          guestContinueBtn.textContent = isSignup ? "Lanjut Daftar" : "Lanjut Masuk";
+        };
+        const onCancel = () => close(false);
+        const onContinue = () => { if (guestCodeCopied) close(true); };
+        const onBackdrop = (ev) => { if (ev.target === guestModal) close(false); };
+        guestCopyBtn.addEventListener("click", onCopy);
+        guestCancelBtn.addEventListener("click", onCancel);
+        guestContinueBtn.addEventListener("click", onContinue);
+        guestModal.addEventListener("click", onBackdrop);
+      });
+    }
+  </script>
+</body>
+</html>

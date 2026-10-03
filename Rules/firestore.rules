@@ -1,0 +1,435 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // MODE TAMU: tamu (belum login/daftar) memakai Firebase Anonymous Auth,
+    // jadi punya request.auth.uid TAPI sign_in_provider-nya "anonymous".
+    // isSignedIn() SENGAJA hanya true untuk akun asli (email/password),
+    // sehingga SEMUA rule lain di file ini otomatis menolak tamu. Satu-satunya
+    // pintu buat tamu ada di match /printJobs (upload, lihat pesanan
+    // miliknya sendiri, dan batalkan) — lewat isGuest() di bawah.
+    function isSignedIn() {
+      return request.auth != null
+             && request.auth.token.firebase.sign_in_provider != "anonymous";
+    }
+    function isGuest() {
+      return request.auth != null
+             && request.auth.token.firebase.sign_in_provider == "anonymous";
+    }
+    // Validasi dokumen pesanan yang dibuat tamu. Cara kerjanya SAMA dengan
+    // user login: kalau ada operator online di wilayah yang sama, pesanan
+    // langsung ditugaskan ke dia (status "pending", nunggu Terima/Tolak);
+    // kalau tidak ada, status "waiting" tanpa operator. Field-nya dikunci,
+    // dan operator yang dipilih HARUS beneran role "printer" + wilayah sama.
+    function guestJobValid() {
+      let d = request.resource.data;
+      return d.keys().hasOnly([
+               "customerId", "customerEmail", "customerName", "customerWaNumber",
+               "isGuest", "regionKey", "customerLocation", "printerId", "printerEmail",
+               "code", "fileName", "fileURL", "fileType", "fileSize", "paperSize",
+               "note", "price", "status", "createdAt"])
+             && d.customerId == request.auth.uid
+             && d.isGuest == true
+             && ((d.status == "waiting" && d.printerId == null && d.printerEmail == null)
+                 || (d.status == "pending" && d.printerId is string && d.printerId.size() > 0
+                     && (d.printerEmail == null || d.printerEmail is string)
+                     && get(/databases/$(database)/documents/users/$(d.printerId)).data.role == "printer"
+                     && regionKeyOf(d.printerId) == d.regionKey))
+             && d.price == null
+             && d.regionKey is string && d.regionKey.size() > 0 && d.regionKey.size() <= 300
+             && d.customerName is string && d.customerName.size() > 0 && d.customerName.size() <= 60
+             && d.customerWaNumber is string && d.customerWaNumber.size() >= 8 && d.customerWaNumber.size() <= 20
+             && d.fileName is string && d.fileName.size() > 0 && d.fileName.size() <= 200
+             && d.fileURL is string && d.fileURL.matches("^https://res\\.cloudinary\\.com/.*")
+             && d.fileSize is number && d.fileSize <= 52428800
+             && (d.note == null || (d.note is string && d.note.size() <= 500))
+             && d.createdAt == request.time;
+    }
+    // Klaim pesanan tamu oleh akun yang sudah login lewat halaman/menu Recovery
+    // (kode pemulihan; lihat applyAccountMigration di js/guest-sync.js): hanya boleh mengganti
+    // pemilik (customerId -> uid sendiri), mengisi customerEmail, dan
+    // mematikan isGuest. Kunci aksesnya = id dokumen (acak, tersimpan di
+    // perangkat tamu). Field lain (wilayah, file, harga, status) terkunci.
+    function guestJobClaim() {
+      return resource.data.get("isGuest", false) == true
+             && request.resource.data.customerId == request.auth.uid
+             && request.resource.data.isGuest == false
+             && request.resource.data.diff(resource.data).affectedKeys()
+                  .hasOnly(["customerId", "customerEmail", "isGuest", "migratedFromGuest"]);
+    }
+    // Cadangan profil tamu: dokumennya diberi nama KODE PEMULIHAN acak
+    // (20 karakter). Hanya bisa di-get (bukan di-list) jadi tidak bisa dicari;
+    // kodenya = kunci. Isi dibatasi ketat.
+    function guestProfileValid(code) {
+      let d = request.resource.data;
+      return code.size() == 20
+             && d.keys().hasOnly(["name", "username", "wa", "province", "city", "district", "village", "jobIds", "updatedAt"])
+             && d.name is string && d.name.size() <= 60
+             && d.username is string && d.username.size() <= 30
+             && d.wa is string && d.wa.size() <= 20
+             && d.province is string && d.province.size() <= 120
+             && d.city is string && d.city.size() <= 120
+             && d.district is string && d.district.size() <= 120
+             && d.village is string && d.village.size() <= 120
+             && d.jobIds is list && d.jobIds.size() <= 100
+             && d.updatedAt == request.time;
+    }
+    function myRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+    // regionKey = Provinsi|Kota/Kab|Kecamatan|Kelurahan/Desa yang sudah
+    // dinormalisasi (dihitung client, lihat regionKeyFrom() di JS/app.js).
+    // Kosong ("") = lokasi belum lengkap -> tidak boleh cocok dengan siapa pun.
+    function regionKeyOf(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data.get("regionKey", "");
+    }
+    function myRegionKey() {
+      return regionKeyOf(request.auth.uid);
+    }
+
+    // settings/paperSizes: daftar pilihan "Ukuran kertas" di upload.html — SATU
+    // daftar untuk semua orang. Boleh dibaca siapa saja (termasuk tamu tanpa
+    // sesi); hanya developer yang boleh membuat/mengubah. Isi daftar dibatasi
+    // jumlahnya (isi tiap elemen tidak bisa divalidasi di rules; client selalu
+    // meng-escape sebelum menampilkan).
+    match /settings/{docId} {
+      allow read: if true;
+      allow create, update: if isSignedIn() && myRole() == "developer"
+                            && docId == "paperSizes"
+                            && request.resource.data.keys().hasOnly(["sizes", "updatedAt", "updatedBy"])
+                            && request.resource.data.sizes is list
+                            && request.resource.data.sizes.size() <= 30
+                            && request.resource.data.updatedBy == request.auth.uid
+                            && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
+    }
+
+    // guestProfiles/{kodePemulihan}: cadangan profil + daftar id pesanan tamu.
+    // Ditulis sesi anonymous (tamu); dibaca & dihapus akun asli saat data tamu
+    // dipindah ke akun (halaman Recovery / menu Recovery, pakai kode pemulihan).
+    match /guestProfiles/{code} {
+      // Dibaca HANYA oleh akun login (menu Recovery -> pindahkan data tamu ke akun).
+      // Tamu (anonymous) tidak boleh membaca/memulihkan cadangan tamu lain.
+      allow get: if isSignedIn();
+      allow create, update: if isGuest() && guestProfileValid(code);
+      allow delete: if isSignedIn();
+    }
+
+    // supportTickets/{id}: pesan Kontak CS dari user yang LOGIN (js/shell.js).
+    // Muncul di Kotak Masuk developer (kategori Bantuan). User cuma boleh
+    // membuat tiket atas namanya sendiri (status "open") dan membaca tiket
+    // miliknya; developer boleh baca semua, menandai "replied" (update
+    // hanya field balasan) dan menghapus.
+    match /supportTickets/{ticketId} {
+      allow read: if isSignedIn() && (myRole() == "developer" || resource.data.uid == request.auth.uid);
+      allow create: if isSignedIn()
+                    && request.resource.data.keys().hasOnly(["uid", "username", "email", "message", "status", "createdAt"])
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.status == "open"
+                    && request.resource.data.message is string
+                    && request.resource.data.message.size() > 0 && request.resource.data.message.size() <= 500
+                    && request.resource.data.username is string && request.resource.data.username.size() <= 60
+                    && request.resource.data.email is string && request.resource.data.email.size() <= 120;
+      allow update: if isSignedIn() && myRole() == "developer"
+                    && request.resource.data.diff(resource.data).affectedKeys()
+                         .hasOnly(["status", "repliedAt", "repliedBy", "replyMessage"]);
+      allow delete: if isSignedIn() && myRole() == "developer";
+    }
+
+    // users/{uid}: profil + role. Setiap orang boleh baca daftar user
+    // (perlu untuk cari operator print yang online). User boleh membuat
+    // dokumennya sendiri saat pertama daftar dengan role customer/printer/
+    // role ini ditentukan di client dari kode Web ID (login.html).
+    // CATATAN KEAMANAN: karena role dipilih sendiri oleh user saat daftar,
+    // siapa pun yang tahu kode rahasianya bisa langsung jadi printer/developer.
+    // Ini keputusan yang sudah disadari risikonya oleh developer.
+    // Mengubah field "role" milik ORANG LAIN hanya boleh developer.
+    // User sendiri boleh ubah "online" (toggle manual operator "lagi nerima
+    // pesanan print"), "presenceStatus" (status profil ala Discord: Online/
+    // Do Not Disturb/Offline, dipilih sendiri di profile.html), "connected"
+    // (penanda tab lagi kebuka, ditulis otomatis — lihat requireAuth di
+    // js/app.js), "displayName", "bio", dst miliknya. "online" &
+    // "presenceStatus" SENGAJA dua field terpisah, tidak saling pengaruh.
+    match /users/{uid} {
+      // Tamu (anonymous) HANYA boleh membaca profil OPERATOR YANG LAGI ONLINE,
+      // dan hanya lewat query yang memang memfilter role=="printer" &&
+      // online==true (dipakai pickOnlinePrinter di js/upload.js buat memilih
+      // operator otomatis, sama seperti user login). Profil customer/developer
+      // dan operator yang offline tetap tertutup buat tamu.
+      allow read: if isSignedIn()
+                  || (isGuest() && resource.data.role == "printer" && resource.data.online == true);
+      allow create: if isSignedIn() && request.auth.uid == uid
+                    && request.resource.data.role in ["customer", "printer", "developer"];
+      allow update: if isSignedIn() && (
+                      myRole() == "developer" ||
+                      (request.auth.uid == uid &&
+                       request.resource.data.diff(resource.data).affectedKeys()
+                         .hasOnly(["online", "presenceStatus", "connected", "displayName", "bio", "photoURL", "waNumber", "location", "regionKey", "authEmail", "socials"]))
+                    );
+      // Cuma developer yang boleh hapus profil user lain (fitur "Hapus user"
+      // di Kelola User). Developer tidak bisa hapus akunnya sendiri lewat sini.
+      allow delete: if isSignedIn() && myRole() == "developer" && request.auth.uid != uid;
+
+      // notifications/{id}: kabar dari developer ke user ini (pesan biasa atau
+      // pengumuman masalah/gangguan) — dikirim lewat halaman "Kirim Notifikasi"
+      // (notify.html / js/notify.js) ATAU otomatis saat developer membalas
+      // pesan Kontak CS (js/inbox.js), dibaca notifications.js dan tampil di
+      // panel lonceng & Kotak Masuk (kategori Sistem / Masalah). "developer"
+      // = nama lama kategori Sistem, tetap diizinkan. Cuma developer yang
+      // boleh bikin; cuma pemilik akun yang boleh baca/hapus punyanya sendiri.
+      match /notifications/{notifId} {
+        allow read, delete: if isSignedIn() && request.auth.uid == uid;
+        allow create: if isSignedIn() && myRole() == "developer"
+                      && request.resource.data.category in ["sistem", "developer", "masalah"]
+                      && request.resource.data.title is string && request.resource.data.title.size() <= 80
+                      && request.resource.data.message is string && request.resource.data.message.size() <= 300;
+        allow update: if false;
+      }
+
+      // Daftar follower & following user ini.
+      match /followers/{followerUid} {
+        allow read: if isSignedIn();
+        allow create, delete: if isSignedIn() && request.auth.uid == followerUid;
+      }
+      match /following/{followingUid} {
+        allow read: if isSignedIn();
+        allow create, delete: if isSignedIn() && request.auth.uid == uid;
+      }
+
+      // friendRequests/{fromUid}: permintaan pertemanan MASUK buat user
+      // ini. Cuma pemilik akun (uid) yang boleh baca daftar permintaannya
+      // sendiri. Yang boleh BIKIN request adalah si pengirim (fromUid).
+      // Hapus dipakai buat "batalkan" (oleh pengirim) atau "tolak/terima"
+      // (oleh penerima, dihapus setelah jadi friends).
+      match /friendRequests/{fromUid} {
+        // BUGFIX: sebelumnya cuma pemilik profil (uid) yang boleh baca —
+        // padahal profile.js JUGA baca dokumen ini buat cek status
+        // "sudah kirim request belum" saat kita buka profil ORANG LAIN
+        // (users/{targetUid}/friendRequests/{me.uid}). Itu selalu kena
+        // permission-denied karena request.auth.uid (kita) != uid
+        // (pemilik profil yang dibuka). Makanya sekarang si PENGIRIM
+        // (fromUid) juga diizinkan baca dokumen request miliknya sendiri.
+        allow read: if isSignedIn() && (request.auth.uid == uid || request.auth.uid == fromUid);
+        allow create: if isSignedIn() && request.auth.uid == fromUid && fromUid != uid;
+        allow delete: if isSignedIn() && (request.auth.uid == uid || request.auth.uid == fromUid);
+      }
+
+      // friends/{friendUid}: pertemanan mutual. Dibuat 2 dokumen sekaligus
+      // (users/A/friends/B dan users/B/friends/A) saat A menerima request
+      // dari B — makanya create diizinkan kalau auth-nya salah satu dari
+      // dua pihak yang berteman.
+      match /friends/{friendUid} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && (request.auth.uid == uid || request.auth.uid == friendUid);
+        allow delete: if isSignedIn() && (request.auth.uid == uid || request.auth.uid == friendUid);
+      }
+    }
+
+    // usernames/{normalizedUsername}: index publik "username -> uid" +
+    // "authEmail" asli (email palsu Firebase Auth yang PERMANEN dipakai
+    // akun itu sejak pertama daftar — TIDAK PERNAH berubah walau username
+    // tampilannya diganti berkali-kali, soalnya client TIDAK BISA ganti
+    // email akun Firebase Auth orang lain tanpa Admin SDK/Cloud Function).
+    // Dipakai login.html BUKAN cuma buat cari email login SEBELUM orangnya
+    // login (makanya read publik, request.auth belum ada di titik itu) —
+    // ini KENAPA field di sini dibatasi CUMA "uid"+"authEmail", bukan data
+    // pribadi lain (itu tetap aman di users/{uid} yang butuh login buat baca).
+    //
+    // Rename (fitur "Edit username" developer, lihat js/users.js) = HAPUS
+    // dokumen lama + BIKIN dokumen baru dengan authEmail yang SAMA (dari
+    // users/{uid}.authEmail) — bukan update, biar uniqueness otomatis
+    // kejamin dari "allow create" yang mensyaratkan resource == null
+    // (nggak bisa timpa nama yang sudah dipakai orang lain).
+    match /usernames/{name} {
+      allow read: if true;
+      allow create: if isSignedIn() && resource == null && (
+                      request.resource.data.uid == request.auth.uid ||
+                      myRole() == "developer"
+                    );
+      allow delete: if isSignedIn() && (
+                      myRole() == "developer" ||
+                      (resource != null && resource.data.uid == request.auth.uid)
+                    );
+      allow update: if false;
+    }
+
+    // printJobs/{jobId}
+    // Alur status (Fase C): "waiting" (belum ada operator) -> "pending"
+    // (sudah ditugaskan ke satu operator, MENUNGGU dia Terima/Tolak) ->
+    // "queued" (diterima, operator sudah isi field "price") -> "printing"
+    // -> "done". Kalau operator Tolak, job balik jadi "waiting" (printerId
+    // dikosongkan) supaya bisa diklaim operator lain — makanya operator
+    // yang sedang jadi pemilik job ("printerId == auth.uid") tetap boleh
+    // update job itu SEKALIPUN dia mau ganti printerId-nya jadi kosong.
+    match /printJobs/{jobId} {
+      // Pesanan cuma boleh dibuat kalau wilayah customer LENGKAP dan sama
+      // dengan regionKey di profilnya, dan (kalau langsung ditugaskan ke
+      // operator) operator itu wilayahnya sama persis.
+      allow create: if (isGuest() && guestJobValid()) ||
+                    (isSignedIn() && request.resource.data.customerId == request.auth.uid
+                    && request.resource.data.regionKey is string
+                    && request.resource.data.regionKey.size() > 0
+                    && request.resource.data.regionKey == myRegionKey()
+                    && (request.resource.data.printerId == null ||
+                        regionKeyOf(request.resource.data.printerId) == request.resource.data.regionKey));
+      // Operator cuma boleh MELIHAT pesanan "waiting" yang wilayahnya sama
+      // dengan wilayahnya sendiri (buat diklaim di printer.js).
+      // SINKRON RIWAYAT TAMU: pesanan tamu boleh DIBACA PER-DOKUMEN (get) oleh
+      // sesi anonymous mana pun yang tahu id dokumennya (20 karakter acak,
+      // tersimpan di perangkat tamu). Ini yang membuat riwayat tamu tetap
+      // tersinkron walau sesi anonymous-nya berganti. LIST tetap tertutup
+      // (cuma pemilik sesi) jadi pesanan tamu lain tidak bisa dicari/diurutkan.
+      // Akun login juga boleh get pesanan tamu (isGuest == true) yang id-nya ia
+      // tahu — dipakai menu Recovery untuk mengecek pesanan yang bisa dipindah ke akun.
+      allow get: if request.auth != null && resource.data.isGuest == true;
+      allow read: if (isGuest() && resource.data.customerId == request.auth.uid) ||
+                    isSignedIn() && (
+                    resource.data.customerId == request.auth.uid ||
+                    resource.data.printerId == request.auth.uid ||
+                    myRole() == "developer" ||
+                    (resource.data.status == "waiting" && myRole() == "printer" &&
+                     myRegionKey() != "" && resource.data.regionKey == myRegionKey())
+                  );
+      // Operator print hanya boleh update job yang jadi miliknya (atau klaim
+      // job "waiting" jadi miliknya lewat transaction di printer.js).
+      // Customer pemilik job JUGA boleh update — TAPI cuma buat MEMBATALKAN
+      // ("Batal") pesanannya sendiri, dan cuma selama belum diterima resmi
+      // operator (status masih "waiting"/"pending" — begitu sudah "queued"
+      // dst customer tidak bisa batalkan sendiri lagi, harus hubungi
+      // operator). Dibatasi CUMA boleh ganti field "status" jadi
+      // "cancelled" + isi "cancelReason" (alasan batal — lihat
+      // openReasonPrompt di app.js) lewat jalur ini, tidak boleh ubah
+      // field lain sama sekali.
+      // Tamu boleh membatalkan pesanan tamu (isGuest) selama belum diterima.
+      // customerId TIDAK lagi dicek: sesi anonymous lama bisa hilang, jadi
+      // kuncinya = id dokumen yang acak (sama seperti aturan get di atas).
+      allow update: if (isGuest() &&
+                        resource.data.isGuest == true &&
+                        resource.data.status in ["waiting", "pending"] &&
+                        request.resource.data.status == "cancelled" &&
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(["status", "cancelReason"])) ||
+                      isSignedIn() && (
+                      guestJobClaim() ||
+                      resource.data.printerId == request.auth.uid ||
+                      (resource.data.status == "waiting" && myRole() == "printer" &&
+                       myRegionKey() != "" && resource.data.regionKey == myRegionKey() &&
+                       !(request.auth.uid in resource.data.get("rejectedBy", []))) ||
+                      myRole() == "developer" ||
+                      (resource.data.customerId == request.auth.uid &&
+                       resource.data.status in ["waiting", "pending"] &&
+                       request.resource.data.status == "cancelled" &&
+                       request.resource.data.diff(resource.data).affectedKeys().hasOnly(["status", "cancelReason"]))
+                    );
+      // Dulu selalu ditolak (if false). Sekarang developer boleh hapus —
+      // dipakai buat bersih-bersih otomatis waktu "Hapus user" (lihat
+      // js/users.js) supaya file/pesanan yang diupload user itu ikut
+      // hilang dari database saat akunnya dihapus.
+      allow delete: if isSignedIn() && myRole() == "developer";
+    }
+
+    // posts/{postId}: postingan profil (gaya IG — teks + opsional gambar).
+    // Dibuat dari halaman profil sendiri. Siapa aja yang login boleh baca
+    // & bikin post baru. Cuma pemilik post (atau developer) yang boleh
+    // edit/hapus post itu.
+    match /posts/{postId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+      allow update: if isSignedIn() && (resource.data.authorId == request.auth.uid || myRole() == "developer");
+      allow delete: if isSignedIn() && (resource.data.authorId == request.auth.uid || myRole() == "developer");
+
+      // like/{uid}: keberadaan dokumen = user itu nge-like post ini.
+      // Hanya pemilik uid yang boleh nulis dokumen like-nya sendiri.
+      // Developer JUGA boleh hapus like siapa pun — dipakai buat bersih-
+      // bersih otomatis waktu "Hapus user" (lihat js/users.js) supaya like
+      // milik user yang dihapus ikut hilang dari post-post orang lain.
+      match /likes/{uid} {
+        allow read: if isSignedIn();
+        allow write: if isSignedIn() && request.auth.uid == uid;
+        allow delete: if isSignedIn() && myRole() == "developer";
+      }
+
+      // comments/{commentId}: komentar orang lain di post ini. Siapa aja
+      // yang login boleh baca & komen. Cuma pemilik komentar (atau
+      // pemilik post, atau developer) yang boleh hapus.
+      match /comments/{commentId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && request.resource.data.authorId == request.auth.uid;
+        allow delete: if isSignedIn() && (
+                        resource.data.authorId == request.auth.uid ||
+                        get(/databases/$(database)/documents/posts/$(postId)).data.authorId == request.auth.uid ||
+                        myRole() == "developer"
+                      );
+      }
+    }
+
+    // channels/{channelId}: "saluran" komunitas ala Discord/WA — bukan
+    // feed postingan. Siapa aja boleh baca daftar & bikin channel baru.
+    // Field "bannedUids" (array of uid, opsional) dikelola pemilik channel
+    // buat fitur kick/ban member dari salurannya sendiri. Cuma pembuat
+    // channel (owner) atau developer yang boleh update/hapus channel.
+    //
+    // PREVIEW TAMU: DAFTAR channel (nama, deskripsi, pembuat, tanggal) boleh dibaca
+    // siapa saja, termasuk yang belum login, supaya tamu bisa melihat ada berapa
+    // channel di Komunitas. ISI obrolan (messages) & anggota (members) tetap
+    // tertutup buat tamu — lihat match di bawah. Catatan: field bannedUids
+    // (kalau ada) ikut terbaca di dokumen channel.
+    match /channels/{channelId} {
+      allow read: if true;
+      allow create: if isSignedIn() && request.resource.data.creatorId == request.auth.uid;
+      allow update: if isSignedIn() && (resource.data.creatorId == request.auth.uid || myRole() == "developer");
+      allow delete: if isSignedIn() && (resource.data.creatorId == request.auth.uid || myRole() == "developer");
+
+      // messages/{msgId}: isi obrolan di dalam channel ini. Siapa aja yang
+      // login DAN belum di-ban dari channel ini boleh baca & kirim pesan.
+      match /messages/{msgId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && request.resource.data.senderId == request.auth.uid
+                      && !(request.auth.uid in get(/databases/$(database)/documents/channels/$(channelId)).data.get("bannedUids", []));
+        allow delete: if isSignedIn() && (
+                        resource.data.senderId == request.auth.uid ||
+                        get(/databases/$(database)/documents/channels/$(channelId)).data.creatorId == request.auth.uid ||
+                        myRole() == "developer"
+                      );
+      }
+
+      // members/{uid}: daftar user yang pernah "masuk" ke channel ini
+      // (dibikin otomatis pas channel.html dibuka). Dipakai buat panel
+      // "Kelola Anggota" pemilik channel — Kick = hapus dokumen member ini
+      // (bisa gabung lagi kalau buka channelnya lagi), Ban = hapus member
+      // + masuk field bannedUids di atas (tidak bisa kirim pesan lagi).
+      match /members/{uid} {
+        allow read: if isSignedIn();
+        allow write: if isSignedIn() && request.auth.uid == uid;
+        allow delete: if isSignedIn() && (
+                        request.auth.uid == uid ||
+                        get(/databases/$(database)/documents/channels/$(channelId)).data.creatorId == request.auth.uid ||
+                        myRole() == "developer"
+                      );
+      }
+    }
+
+    // conversations/{convId}: DM antara 2 user. ID selalu "{uidKecil}_{uidBesar}"
+    // (lihat conversationId() di js/app.js) supaya konsisten & tidak dobel.
+    match /conversations/{convId} {
+      // BUGFIX: messages.js SELALU getDoc() dulu buat cek "percakapan ini
+      // udah ada belum" sebelum setDoc() bikin baru (dipanggil tiap kali
+      // klik "Kirim pesan" dari profil seseorang). Kalau ini obrolan
+      // PERTAMA, dokumennya belum ada -> resource == null -> baca
+      // "resource.data.participants" error -> dianggap permission-denied
+      // walau harusnya boleh. Makanya sekarang read diizinkan juga kalau
+      // resource == null (dokumennya belum ada), baru kalau SUDAH ada
+      // dicek partisipannya.
+      allow read: if isSignedIn() && (resource == null || request.auth.uid in resource.data.participants);
+      allow update: if isSignedIn() && request.auth.uid in resource.data.participants;
+      allow create: if isSignedIn() && request.auth.uid in request.resource.data.participants
+                    && request.resource.data.participants.size() == 2;
+
+      match /messages/{msgId} {
+        allow read: if isSignedIn() &&
+                    request.auth.uid in get(/databases/$(database)/documents/conversations/$(convId)).data.participants;
+        allow create: if isSignedIn() && request.auth.uid == request.resource.data.senderId &&
+                      request.auth.uid in get(/databases/$(database)/documents/conversations/$(convId)).data.participants;
+      }
+    }
+  }
+}

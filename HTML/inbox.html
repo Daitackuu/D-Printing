@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kotak Masuk — D'Printing</title>
+<link rel="icon" type="image/png" href="../Resources/Images/Web-Logo.png">
+<link rel="apple-touch-icon" href="../Resources/Images/Web-Logo.png">
+<link rel="stylesheet" href="../CSS/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-col">
+      <div class="topbar-mini" id="topbarMini"></div>
+
+      <div class="wrap" style="max-width:1200px;">
+        <p class="eyebrow" id="inboxEyebrow">Kotak Masuk</p>
+        <h1 id="inboxHeading">Semua kabarmu, satu tempat</h1>
+        <p class="sub">Notifikasi pesanan, pesan, komunitas, dan kabar dari developer terkumpul di sini — disortir per label kayak email.</p>
+
+        <div class="mail-layout" id="mailLayout">
+          <!-- kolom 1: label / kategori -->
+          <nav class="mail-labels" id="mailLabels" aria-label="Label kotak masuk"></nav>
+
+          <!-- kolom 2: daftar -->
+          <section class="mail-list-col" aria-label="Daftar kabar">
+            <div class="mail-search-row">
+              <input type="text" id="mailSearch" placeholder="Cari judul atau isi…" aria-label="Cari kabar">
+              <div id="mailSortWrap"></div>
+            </div>
+            <div class="mail-toolbar" id="mailToolbar"></div>
+            <div class="mail-list" id="mailList"></div>
+          </section>
+
+          <!-- kolom 3: baca -->
+          <section class="mail-read" id="mailRead" aria-label="Isi kabar"></section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bubbleMenuRoot"></div>
+  <script type="module" src="../JS/inbox.js"></script>
+</body>
+</html>

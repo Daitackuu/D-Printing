@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Printing — D'Printing</title>
+<link rel="icon" type="image/png" href="../Resources/Images/Web-Logo.png">
+<link rel="apple-touch-icon" href="../Resources/Images/Web-Logo.png">
+<link rel="stylesheet" href="../CSS/style.css">
+<link rel="stylesheet" href="../CSS/printer.css">
+</head>
+<body class="page-printer">
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-col">
+      <div class="topbar-mini" id="topbarMini"></div>
+
+      <div class="wrap">
+        <a href="upload.html" class="job-meta channel-back-link"><span class="icon-img icon-sm" role="img" aria-label="Kembali" style="--icon:url('../Resources/Icons/Back.png')"></span> Kembali ke Upload</a>
+        <header class="pg-head">
+          <h1 id="greeting">Halo, operator</h1>
+          <p class="sub">Mulai bekerja supaya file dari customer masuk ke sini.</p>
+        </header>
+
+        <div class="ticket work-card" id="workCard">
+          <div class="work-info">
+            <span class="work-dot" aria-hidden="true"></span>
+            <div>
+              <div class="work-title" id="workTitle">Lagi istirahat</div>
+              <div class="job-meta" id="statusText">Sedang offline — tidak menerima file baru.</div>
+            </div>
+          </div>
+          <button type="button" class="work-btn" id="onlineToggle" aria-pressed="false">Mulai Bekerja</button>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-tile is-accent"><div class="stat-label">Pendapatan</div><div class="stat-value" id="statEarnings">Rp 0</div></div>
+          <div class="stat-tile is-alert"><div class="stat-label">Perlu konfirmasi</div><div class="stat-value" id="statPending">0</div></div>
+          <div class="stat-tile"><div class="stat-label">Antrean cetak</div><div class="stat-value" id="statActive">0</div></div>
+          <div class="stat-tile"><div class="stat-label">Selesai</div><div class="stat-value" id="statDone">0</div></div>
+        </div>
+
+        <div class="ticket section-attn" id="pendingCard">
+          <h2 class="section-title">Pesanan masuk <span class="count-pill" id="pendingCount">0</span></h2>
+          <p class="sub sec-sub">Terima untuk isi harga &amp; masuk antrean, atau Tolak supaya dilempar ke operator lain.</p>
+          <div id="pendingList"><div class="skeleton-list" aria-busy="true" aria-label="Memuat"><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div></div></div>
+        </div>
+
+        <div class="ticket">
+          <div class="section-head-row">
+            <h2 class="section-title">Antrean cetak <span class="count-pill" id="jobsCount">0</span></h2>
+            <div class="view-toggle" id="jobsViewToggle" role="group" aria-label="Tampilan File untuk diprint">
+              <button type="button" data-view="list" title="Tampilan list" aria-label="Tampilan list">
+                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4.5" width="14" height="2" rx="1" fill="currentColor"/><rect x="3" y="9" width="14" height="2" rx="1" fill="currentColor"/><rect x="3" y="13.5" width="14" height="2" rx="1" fill="currentColor"/></svg>
+              </button>
+              <button type="button" data-view="grid" title="Tampilan grid" aria-label="Tampilan grid">
+                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="6" height="6" rx="1.2" fill="currentColor"/><rect x="11" y="3" width="6" height="6" rx="1.2" fill="currentColor"/><rect x="3" y="11" width="6" height="6" rx="1.2" fill="currentColor"/><rect x="11" y="11" width="6" height="6" rx="1.2" fill="currentColor"/></svg>
+              </button>
+            </div>
+          </div>
+          <div id="jobList"><div class="skeleton-list" aria-busy="true" aria-label="Memuat"><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div></div></div>
+        </div>
+
+        <div class="ticket">
+          <div class="section-head-row">
+            <h2 class="section-title">Selesai dicetak <span class="count-pill" id="historyCount">0</span></h2>
+            <div class="view-toggle" id="historyViewToggle" role="group" aria-label="Tampilan Riwayat selesai print">
+              <button type="button" data-view="list" title="Tampilan list" aria-label="Tampilan list">
+                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4.5" width="14" height="2" rx="1" fill="currentColor"/><rect x="3" y="9" width="14" height="2" rx="1" fill="currentColor"/><rect x="3" y="13.5" width="14" height="2" rx="1" fill="currentColor"/></svg>
+              </button>
+              <button type="button" data-view="grid" title="Tampilan grid" aria-label="Tampilan grid">
+                <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="6" height="6" rx="1.2" fill="currentColor"/><rect x="11" y="3" width="6" height="6" rx="1.2" fill="currentColor"/><rect x="3" y="11" width="6" height="6" rx="1.2" fill="currentColor"/><rect x="11" y="11" width="6" height="6" rx="1.2" fill="currentColor"/></svg>
+              </button>
+            </div>
+          </div>
+          <p class="sub sec-sub">Pesanan yang sudah kamu selesaikan, terbaru di atas.</p>
+          <div id="historyList"><div class="skeleton-list" aria-busy="true" aria-label="Memuat"><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal: isi harga pas Terima pesanan -->
+  <div class="modal-backdrop hidden" id="priceModal">
+    <div class="modal-box" style="max-width:380px;">
+      <h3>Terima pesanan</h3>
+      <p class="sub" id="priceModalFileName" style="margin-bottom:14px;"></p>
+      <label for="priceInput">Harga cetak (Rp)</label>
+      <input type="number" id="priceInput" min="0" step="500" placeholder="Contoh: 15000">
+      <div class="error-msg" id="priceErr"></div>
+      <div class="modal-actions" style="margin-top:16px;">
+        <button class="btn btn-outline" id="priceCancelBtn">Batal</button>
+        <button class="btn btn-primary" id="priceConfirmBtn">Terima & masukin antrean</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../JS/printer.js"></script>
+</body>
+</html>

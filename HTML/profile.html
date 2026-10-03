@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profil — D'Printing</title>
+<link rel="icon" type="image/png" href="../Resources/Images/Web-Logo.png">
+<link rel="apple-touch-icon" href="../Resources/Images/Web-Logo.png">
+<link rel="stylesheet" href="../CSS/style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-col">
+      <div class="topbar-mini" id="topbarMini"></div>
+
+      <div class="wrap">
+        <div class="ticket" id="profileCard">
+          <div class="skeleton-list" aria-busy="true" aria-label="Memuat"><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div></div>
+        </div>
+
+        <div class="ticket hidden" id="editCard">
+          <h2>Profil Pelanggan</h2>
+          <details class="edit-sec" id="secData" open>
+            <summary><span class="edit-sec-title"><span class="icon-img icon-sm" role="img" aria-label="" style="--icon:url('../Resources/Icons/Profile.png')"></span>Data diri</span><span class="edit-sec-arrow">▾</span></summary>
+            <div class="edit-sec-body">
+          <label for="displayNameInput" id="displayNameLabel">Nama</label>
+          <input type="text" id="displayNameInput" placeholder="Nama kamu">
+          <label for="guestUsernameInput" id="guestUsernameLabel" class="hidden">Username</label>
+          <input type="text" id="guestUsernameInput" class="hidden" placeholder="usernamekamu" maxlength="20" autocomplete="off">
+          <label for="waNumberInput" id="waNumberLabel">No. WhatsApp (opsional)</label>
+          <input type="text" id="waNumberInput" placeholder="Contoh: 6281234567890">
+          <p class="job-meta" style="margin:4px 0 0;">Isi awalan nomor dengan format negara tanpa tanda "+".</p>
+            </div>
+          </details>
+
+          <details class="edit-sec" id="secLoc" open>
+            <summary><span class="edit-sec-title"><span class="icon-img icon-sm" role="img" aria-label="" style="--icon:url('../Resources/Icons/Location.png')"></span><span id="locationLabel">Lokasi</span></span><span class="edit-sec-arrow">▾</span></summary>
+            <div class="edit-sec-body">
+          <div class="loc-section">
+            <div class="loc-head">
+              <div class="loc-head-text">
+                <p class="loc-sub" id="locationSub">Wajib lengkap sebelum upload pesanan.</p>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm loc-detect-btn" id="detectLocationBtn">Isi otomatis</button>
+            </div>
+            <div class="error-msg" id="locationErr"></div>
+
+            <div class="loc-map-card hidden" id="locationMapWrap">
+              <button type="button" class="loc-map-bar" id="locationMapToggle" aria-expanded="false" aria-controls="locationMap">
+                <span class="loc-map-bar-title">Peta lokasi</span>
+                <span class="loc-map-bar-hint" id="locationMapHint">Lihat &amp; geser pin</span>
+                <span class="loc-map-bar-arrow" id="locationMapArrow">▾</span>
+              </button>
+              <div id="locationMap" class="location-map hidden"></div>
+            </div>
+
+            <div class="loc-grid">
+              <div class="loc-field">
+                <label for="locProvinceSelect">Provinsi</label>
+                <select id="locProvinceSelect">
+                  <option value="">Memuat daftar provinsi…</option>
+                </select>
+                <input type="text" id="locProvinceCustomInput" class="hidden" placeholder="Tulis nama provinsi kamu">
+              </div>
+              <div class="loc-field">
+                <label for="locCitySelect">Kota / Kabupaten</label>
+                <select id="locCitySelect" disabled>
+                  <option value="">Pilih provinsi dulu</option>
+                </select>
+                <input type="text" id="locCityCustomInput" class="hidden" placeholder="Tulis nama kota/kabupaten kamu">
+              </div>
+              <div class="loc-field">
+                <label for="locDistrictSelect">Kecamatan</label>
+                <select id="locDistrictSelect" disabled>
+                  <option value="">Pilih kota/kabupaten dulu</option>
+                </select>
+                <input type="text" id="locDistrictCustomInput" class="hidden" placeholder="Tulis nama kecamatan kamu">
+              </div>
+              <div class="loc-field">
+                <label for="locVillageSelect">Kelurahan / Desa</label>
+                <select id="locVillageSelect" disabled>
+                  <option value="">Pilih kecamatan dulu</option>
+                </select>
+                <input type="text" id="locVillageCustomInput" class="hidden" placeholder="Tulis nama kelurahan/desa kamu">
+              </div>
+            </div>
+            <p class="loc-note">Pesanan cuma dicocokkan antara customer &amp; operator dengan wilayah yang sama persis sampai kelurahan/desa.</p>
+
+            <button type="button" class="loc-detail-toggle" id="streetDetailToggleBtn" aria-expanded="false">
+              <span>Detail alamat <span class="loc-detail-opt">(opsional)</span></span>
+              <span class="loc-detail-arrow" id="streetDetailToggleArrow">▾</span>
+            </button>
+            <div class="loc-detail" id="streetDetailCollapse">
+              <div class="loc-detail-grid">
+                <div class="loc-field">
+                  <label for="locPostalCodeInput">Kode pos</label>
+                  <input type="text" id="locPostalCodeInput" placeholder="65141" inputmode="numeric" maxlength="10">
+                </div>
+                <div class="loc-field">
+                  <label for="locRtRwInput">RT/RW</label>
+                  <input type="text" id="locRtRwInput" placeholder="RT 03/RW 05" autocomplete="off">
+                </div>
+                <div class="loc-field loc-span-2">
+                  <label for="locStreetInput">Jalan &amp; nomor rumah</label>
+                  <input type="text" id="locStreetInput" placeholder="Jl. Merdeka No. 12" autocomplete="off">
+                </div>
+                <div class="loc-field loc-span-2">
+                  <label for="locLandmarkInput">Patokan</label>
+                  <input type="text" id="locLandmarkInput" placeholder="Dekat SDN 1" autocomplete="off">
+                </div>
+              </div>
+            </div>
+          </div>
+
+            </div>
+          </details>
+
+          <details class="edit-sec" id="secSocial" open>
+            <summary><span class="edit-sec-title"><span class="icon-img icon-sm" role="img" aria-label="" style="--icon:url('../Resources/Icons/Social.png')"></span>Sosial</span><span class="edit-sec-arrow">▾</span></summary>
+            <div class="edit-sec-body">
+              <label>Foto profil</label>
+              <div class="edit-photo">
+                <div id="editPhotoPreview"></div>
+                <div class="edit-photo-side">
+                  <button type="button" class="btn btn-outline btn-sm" id="editPhotoBtn"><span class="icon-img" role="img" aria-label="" style="--icon:url('../Resources/Icons/Image-Add.png')"></span> Ganti foto</button>
+                  <p class="job-meta" id="editPhotoHint" style="margin:6px 0 0;">JPG / PNG. Foto baru dipakai setelah klik Simpan.</p>
+                </div>
+              </div>
+              <label for="bioInput">Bio</label>
+              <input type="text" id="bioInput" placeholder="Ceritain dikit tentang kamu">
+              <p class="job-meta" style="margin:14px 0 4px;">Tautan sosial (opsional). Tampil di profilmu sebagai link.</p>
+              <label for="socInstagram">Instagram</label>
+              <input type="text" id="socInstagram" placeholder="username (tanpa @)" autocomplete="off" maxlength="60">
+              <label for="socTiktok">TikTok</label>
+              <input type="text" id="socTiktok" placeholder="username (tanpa @)" autocomplete="off" maxlength="60">
+              <label for="socFacebook">Facebook</label>
+              <input type="text" id="socFacebook" placeholder="username / nama profil" autocomplete="off" maxlength="60">
+              <label for="socYoutube">YouTube</label>
+              <input type="text" id="socYoutube" placeholder="username (tanpa @)" autocomplete="off" maxlength="60">
+            </div>
+          </details>
+
+          <div class="error-msg" id="editErr"></div>
+          <div class="edit-actions">
+            <button type="button" class="btn btn-primary" id="saveProfileBtn">Simpan</button>
+            <button type="button" class="btn btn-outline" id="cancelEditBtn">Batal</button>
+          </div>
+        </div>
+
+        <div class="ticket">
+          <h2>Postingan</h2>
+          <div id="postGrid" class="post-grid"><div class="empty-state">Memuat…</div></div>
+        </div>
+
+        <!-- Fase C: riwayat print (customer) / riwayat dikerjakan + pendapatan (operator) -->
+        <div class="ticket hidden" id="historyCard">
+          <h2 id="historyTitle">Riwayat</h2>
+          <div id="earningsBox" class="hidden" style="margin-bottom:14px;"></div>
+          <div id="historyList"><div class="skeleton-list" aria-busy="true" aria-label="Memuat"><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- input file tersembunyi buat ganti foto profil -->
+  <input type="file" id="avatarInput" accept=".png,.jpg,.jpeg" class="hidden">
+
+  <!-- modal: bikin postingan baru -->
+  <div class="modal-backdrop hidden" id="newPostModal">
+    <div class="modal-box" style="max-width:440px;">
+      <h3>Postingan baru</h3>
+      <textarea id="newPostText" class="post-textarea" placeholder="Lagi ngapain, gan?" rows="3"></textarea>
+      <div id="newPostPreviewWrap" class="hidden" style="margin-top:10px;">
+        <img id="newPostPreview" style="width:100%;border-radius:8px;display:block;">
+      </div>
+      <input type="file" id="newPostImageInput" accept=".png,.jpg,.jpeg" class="hidden">
+      <button class="btn btn-outline" id="newPostAddImageBtn" style="margin-top:10px;"><span class="icon-img" role="img" aria-label="Gambar" style="--icon:url('../Resources/Icons/Image-Upload.png')"></span> Tambah gambar</button>
+      <div class="error-msg" id="newPostErr"></div>
+      <div class="modal-actions" style="margin-top:16px;">
+        <button class="btn btn-outline" id="newPostCancel">Batal</button>
+        <button class="btn btn-primary" id="newPostSubmit">Posting</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal: detail postingan + komentar -->
+  <div class="modal-backdrop hidden" id="postDetailModal">
+    <div class="modal-box" style="max-width:480px;max-height:88vh;overflow-y:auto;">
+      <div id="postDetailBody"></div>
+    </div>
+  </div>
+
+  <!-- modal: ganti status profil (Online / Do Not Disturb / Offline) -->
+  <div class="modal-backdrop hidden" id="statusModal">
+    <div class="modal-box status-modal-box" style="max-width:300px;">
+      <h3>Ubah status</h3>
+      <div id="statusMenuList"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script type="module" src="../JS/profile.js"></script>
+</body>
+</html>

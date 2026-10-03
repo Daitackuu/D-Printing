@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kirim Notifikasi — D'Printing</title>
+<link rel="icon" type="image/png" href="../Resources/Images/Web-Logo.png">
+<link rel="apple-touch-icon" href="../Resources/Images/Web-Logo.png">
+<link rel="stylesheet" href="../CSS/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-col">
+      <div class="topbar-mini" id="topbarMini"></div>
+
+      <div class="wrap" style="max-width:760px;">
+        <p class="eyebrow">Panel developer</p>
+        <h1>Kirim Notifikasi</h1>
+        <p class="sub">Kirim pesan atau pengumuman ke lonceng notifikasi user — ke user yang kamu pilih.</p>
+
+        <div class="notify-card">
+          <!-- 1) Penerima -->
+          <div class="notify-step-title">1. Penerima</div>
+          <div class="view-toggle notify-mode" id="notifyMode" role="tablist" aria-label="Jenis penerima">
+            <button type="button" class="active" role="tab" data-mode="users" aria-selected="true">User</button>
+          </div>
+
+          <!-- daftar user -->
+          <div id="notifyUsersPane">
+            <input type="text" id="notifyUserSearch" placeholder="Cari username atau email...">
+            <div class="notify-picked" id="notifyPicked"></div>
+            <div class="notify-user-list" id="notifyUserList"></div>
+            <div class="notify-list-actions">
+              <button type="button" class="notif-link-btn" id="notifyPickShown">Pilih semua yang tampil</button>
+              <button type="button" class="notif-link-btn" id="notifyClearPicked">Kosongkan pilihan</button>
+            </div>
+          </div>
+
+          <!-- 2) Isi -->
+          <div class="notify-step-title">2. Isi notifikasi</div>
+          <label for="notifyCat">Jenis</label>
+          <select id="notifyCat">
+            <option value="sistem">Pesan dari developer / sistem</option>
+            <option value="masalah">Masalah / gangguan</option>
+          </select>
+          <label for="notifyTitle">Judul</label>
+          <input type="text" id="notifyTitle" maxlength="80" placeholder="mis. Info dari developer">
+          <label for="notifyMessage">Pesan <span class="notify-count" id="notifyCount">0/300</span></label>
+          <textarea class="post-textarea" id="notifyMessage" rows="5" maxlength="300" placeholder="Isi pesan (maks. 300 karakter)"></textarea>
+
+          <div class="error-msg" id="notifyErr"></div>
+          <div class="notify-actions">
+            <span class="notify-summary" id="notifySummary"></span>
+            <button type="button" class="btn btn-primary" id="notifySendBtn">Kirim notifikasi</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bubbleMenuRoot"></div>
+  <script type="module" src="../JS/notify.js"></script>
+</body>
+</html>

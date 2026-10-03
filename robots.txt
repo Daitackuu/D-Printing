@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /HTML/printer
+Disallow: /HTML/users
+Disallow: /HTML/notify
+
+Sitemap: https://d-printing.therealofbest.workers.dev/sitemap.xml

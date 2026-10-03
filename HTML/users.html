@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kelola User — D'Printing</title>
+<link rel="icon" type="image/png" href="../Resources/Images/Web-Logo.png">
+<link rel="apple-touch-icon" href="../Resources/Images/Web-Logo.png">
+<link rel="stylesheet" href="../CSS/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-col">
+      <div class="topbar-mini" id="topbarMini"></div>
+
+      <div class="wrap" style="max-width:920px;">
+        <p class="eyebrow">Panel developer</p>
+        <h1>Kelola User</h1>
+        <p class="sub">Semua pengguna dikelompokkan per kategori. Ubah role, blokir (ban), atau hapus akun siapa pun. Klik nama user untuk buka profilnya — riwayat upload/dikerjakan cuma bisa dilihat developer dari sana.</p>
+
+        <div class="user-tools">
+          <input type="text" id="userSearch" placeholder="Cari username atau email...">
+        </div>
+        <div class="tabs-row usercat-tabs" id="userTabs" role="tablist"></div>
+        <div class="error-msg" id="usersPageErr" style="margin:10px 0 0;"></div>
+        <div id="userRows"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal: ganti field "username" (bukan nama tampilan) langsung ke
+       dokumen Firestore-nya, tanpa perlu buka Firebase Console manual —
+       sekarang rename PENUH, lihat js/app.js#renameUsername -->
+  <div class="modal-backdrop hidden" id="editUsernameModal">
+    <div class="modal-box" style="max-width:380px;">
+      <h3>Edit username</h3>
+      <p class="sub" style="margin-top:-4px;">Ganti username user ini sepenuhnya (bebas, tidak harus ejaan/kapitalisasi doang). Ini BEDA sama "Nama tampilan" (yang muncul gede di profil). Password-nya tidak berubah, TAPI begitu disimpan, username LAMA langsung berhenti bisa dipakai login — orang ini wajib pakai username BARU lain kali Masuk.</p>
+      <label for="editUsernameInput">Username</label>
+      <input type="text" id="editUsernameInput" placeholder="mis. Satya" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <div class="error-msg" id="editUsernameErr"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="editUsernameCancelBtn" type="button">Batal</button>
+        <button class="btn btn-primary" id="editUsernameSaveBtn" type="button">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- modal: developer paksa-ganti password login user lain. Password TIDAK
+       pernah dibaca/ditampilkan (Firestore tidak nyimpen password sama
+       sekali) — ini set password BARU lewat Cloud Function "adminChangePassword"
+       (Admin SDK), soalnya client Firebase Auth memang tidak bisa ganti
+       password akun ORANG LAIN tanpa itu. Lihat js/users.js &
+       README.md bagian "Setup Cloud Function (opsional) — Ganti Password". -->
+  <div class="modal-backdrop hidden" id="changePasswordModal">
+    <div class="modal-box" style="max-width:380px;">
+      <h3>Ganti password</h3>
+      <p class="sub" id="changePasswordSub" style="margin-top:-4px;"></p>
+      <label for="newPasswordInput">Password baru</label>
+      <input type="password" id="newPasswordInput" placeholder="Minimal 6 karakter" autocomplete="new-password">
+      <label for="newPasswordConfirmInput">Ulangi password baru</label>
+      <input type="password" id="newPasswordConfirmInput" placeholder="Ketik ulang password baru" autocomplete="new-password">
+      <div class="error-msg" id="changePasswordErr"></div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="changePasswordCancelBtn" type="button">Batal</button>
+        <button class="btn btn-primary" id="changePasswordSaveBtn" type="button">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="bubbleMenuRoot"></div>
+  <script type="module" src="../JS/users.js"></script>
+</body>
+</html>

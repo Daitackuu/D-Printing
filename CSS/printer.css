@@ -1,0 +1,269 @@
+/* ===================================================================
+   Dashboard Printing — tampilan minimalis
+   Dimuat SETELAH style.css dan semua aturan di-scope ke body.page-printer,
+   jadi halaman lain tidak ikut berubah.
+
+   Prinsip:
+   - satu permukaan putih polos, garis tipis, tanpa lubang "tiket"
+   - warna hanya untuk status (kuning antre, biru diprint, hijau selesai,
+     merah butuh konfirmasi); sisanya navy + abu
+   - detail pesanan (kode, tanggal, ukuran file, kertas) jadi chip kecil
+   =================================================================== */
+
+.page-printer{
+  --pp-line:#E3E8F0;
+  --pp-line-strong:#CDD5E3;
+  --pp-muted:#6B7891;
+  --pp-radius:14px;
+  --pp-green:#2F6B4A;   --pp-green-bg:#E7F3EB;
+  --pp-gold:#9A6A12;    --pp-gold-bg:#FBF2DC;
+  --pp-blue:#2A4A86;    --pp-blue-bg:#E8EEFA;
+  --pp-red:#B23A32;     --pp-red-bg:#FBEBE9;
+  --pp-grey:#5B667C;    --pp-grey-bg:#EDF0F5;
+  background:#F5F7FA;
+}
+
+/* ---------- lebar & ritme halaman ---------- */
+.page-printer .wrap{max-width:960px;padding:28px 28px 88px;}
+
+.page-printer .channel-back-link{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--pp-muted);text-decoration:none;
+  padding:4px 10px 4px 6px;margin-left:-6px;border-radius:8px;
+  transition:background .15s ease,color .15s ease;
+}
+.page-printer .channel-back-link:hover{background:var(--paper-2);color:var(--ink);}
+
+.page-printer .pg-head{margin:14px 0 22px;}
+.page-printer .pg-head h1{
+  font-family:var(--sans);font-weight:600;font-size:30px;letter-spacing:-.02em;
+  line-height:1.15;margin:0 0 4px;
+}
+.page-printer .pg-head .sub{margin:0;color:var(--pp-muted);}
+
+/* ---------- semua "ticket" jadi kartu polos ---------- */
+.page-printer .ticket{
+  background:var(--white);
+  border:1px solid var(--pp-line);
+  border-radius:var(--pp-radius);
+  padding:22px 22px 20px;
+  margin-bottom:18px;
+  box-shadow:none;
+}
+.page-printer .ticket::before,
+.page-printer .ticket::after{display:none;}
+
+/* ---------- status kerja (elemen utama halaman) ---------- */
+.page-printer .work-card{
+  padding:18px 20px;
+  gap:14px 20px;
+  margin-bottom:14px;
+}
+.page-printer .work-card.is-on{
+  background:linear-gradient(90deg,var(--pp-green-bg),var(--white) 70%);
+  border-color:rgba(47,107,74,.35);
+}
+.page-printer .work-info{gap:16px;}
+.page-printer .work-dot{width:12px;height:12px;background:#A3ADC0;}
+.page-printer .work-card.is-on .work-dot{background:var(--pp-green);}
+.page-printer .work-card.is-on .work-dot::after{border-color:var(--pp-green);}
+.page-printer .work-title{font-size:17px;font-weight:600;margin:0 0 2px;}
+.page-printer .work-card .job-meta{font-size:13px;color:var(--pp-muted);line-height:1.45;}
+.page-printer .work-btn{
+  padding:10px 22px;font-size:14px;font-weight:600;
+  border-width:1px;
+}
+.page-printer .work-btn:hover{transform:none;opacity:.92;}
+.page-printer .work-btn.on{background:var(--white);border-color:var(--pp-line-strong);}
+.page-printer .work-btn.on:hover{border-color:var(--ink-soft);opacity:1;}
+
+/* ---------- statistik ---------- */
+.page-printer .stat-grid{
+  display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:12px;margin:0 0 22px;
+}
+.page-printer .stat-tile{
+  border:1px solid var(--pp-line);border-radius:var(--pp-radius);
+  padding:16px 18px;background:var(--white);
+}
+.page-printer .stat-label{font-size:12.5px;font-weight:500;color:var(--pp-muted);}
+.page-printer .stat-value{
+  font-family:var(--sans);font-size:26px;font-weight:600;letter-spacing:-.02em;
+  margin-top:6px;font-variant-numeric:tabular-nums;
+}
+.page-printer .stat-tile.is-accent{background:var(--ink);border-color:var(--ink);}
+.page-printer .stat-tile.is-accent .stat-label{color:rgba(255,255,255,.7);}
+.page-printer .stat-tile.is-accent .stat-value{color:#fff;font-size:28px;}
+/* angka "Perlu konfirmasi" memerah begitu ada pesanan yang menunggu */
+.page-printer:has(#pendingCard.has-items) .stat-tile.is-alert{border-color:rgba(178,58,50,.35);background:var(--pp-red-bg);}
+.page-printer:has(#pendingCard.has-items) .stat-tile.is-alert .stat-value{color:var(--pp-red);}
+
+/* ---------- judul section ---------- */
+.page-printer .section-title{
+  font-family:var(--sans);font-size:16px;font-weight:600;letter-spacing:-.01em;
+  margin:0;gap:10px;
+}
+.page-printer .section-head-row{margin-bottom:4px;}
+.page-printer .sec-sub{font-size:13px;color:var(--pp-muted);margin:4px 0 16px;}
+.page-printer .section-head-row + #jobList,
+.page-printer .section-head-row + #historyList{margin-top:14px;}
+.page-printer .count-pill{
+  min-width:24px;padding:1px 8px;font-size:12px;font-weight:600;
+  background:var(--pp-grey-bg);color:var(--pp-grey);
+}
+.page-printer .section-attn.has-items{
+  border-color:rgba(178,58,50,.4);box-shadow:none;
+  background:linear-gradient(180deg,#FFFAF9,var(--white) 90px);
+}
+.page-printer .section-attn.has-items .count-pill{background:var(--pp-red);color:#fff;}
+
+/* ---------- toggle list/grid ---------- */
+.page-printer .view-toggle{border-color:var(--pp-line);border-radius:9px;background:var(--white);}
+.page-printer .view-toggle button{width:34px;height:30px;}
+.page-printer .view-toggle button svg{width:15px;height:15px;}
+.page-printer .view-toggle button.active{background:var(--ink);}
+
+/* ---------- baris pesanan (mode list) ---------- */
+.page-printer .job-row{
+  position:relative;
+  padding:14px 16px 14px 18px;
+  gap:16px;
+  border:1px solid var(--pp-line);
+  border-radius:12px;
+  background:var(--white);
+  transition:border-color .15s ease,box-shadow .15s ease;
+}
+.page-printer .job-row+.job-row{margin-top:10px;}
+.page-printer .job-row:hover{border-color:var(--pp-line-strong);box-shadow:0 1px 8px rgba(27,42,74,.06);}
+
+/* garis status di sisi kiri (progressive enhancement lewat :has) */
+.page-printer .job-row::before,
+.page-printer .job-card::before{
+  content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;
+  background:var(--pp-line-strong);
+}
+.page-printer .job-card{position:relative;}
+.page-printer :is(.job-row,.job-card):has(.stamp-queued)::before{background:#D9A441;}
+.page-printer :is(.job-row,.job-card):has(.stamp-printing)::before{background:var(--pp-blue);}
+.page-printer :is(.job-row,.job-card):has(.stamp-done)::before{background:#4E9970;}
+.page-printer :is(.job-row,.job-card):has([data-accept])::before{background:var(--pp-red);}
+
+.page-printer .job-name{font-size:14.5px;font-weight:600;line-height:1.35;margin-bottom:6px;}
+.page-printer .job-price{
+  margin-top:8px;font-family:var(--mono);font-weight:600;font-size:13px;color:var(--ink);
+}
+.page-printer .job-loc{
+  margin-top:8px;font-size:12.5px;color:var(--pp-muted);
+  display:flex;align-items:center;gap:6px;
+}
+.page-printer .job-loc::before{
+  content:"";width:11px;height:11px;flex:none;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E") center/contain no-repeat;
+          mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+
+/* ---------- chip detail ---------- */
+.page-printer .chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.page-printer .chip{
+  display:inline-flex;align-items:center;
+  font-size:12px;line-height:1;padding:5px 8px;border-radius:7px;
+  background:var(--pp-grey-bg);color:var(--pp-grey);white-space:nowrap;
+}
+.page-printer .chip-code{
+  font-family:var(--mono);font-weight:600;color:var(--ink);background:#E6EBF5;letter-spacing:.01em;
+}
+
+/* ---------- catatan customer ---------- */
+.page-printer .job-note-box{
+  margin-top:10px;padding:9px 12px;border-radius:9px;border:none;
+  background:var(--pp-gold-bg);color:#5F4410;font-size:13px;line-height:1.5;
+}
+.page-printer .job-note-box strong{color:var(--pp-gold);font-weight:600;}
+
+/* ---------- badge status: pil polos, tanpa cap miring ---------- */
+.page-printer .stamp-badge{
+  transform:none;border:none;text-transform:none;letter-spacing:0;
+  font-family:var(--sans);font-size:12px;font-weight:600;
+  padding:5px 10px 5px 9px;border-radius:999px;gap:6px;
+  background:var(--pp-grey-bg);color:var(--pp-grey);
+}
+.page-printer .stamp-badge::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none;
+}
+.page-printer .stamp-queued{color:var(--pp-gold);background:var(--pp-gold-bg);}
+.page-printer .stamp-printing{color:var(--pp-blue);background:var(--pp-blue-bg);}
+.page-printer .stamp-done{color:var(--pp-green);background:var(--pp-green-bg);}
+.page-printer .stamp-waiting{color:var(--pp-red);background:var(--pp-red-bg);}
+.page-printer .stamp-cancelled{color:var(--pp-grey);background:var(--pp-grey-bg);text-decoration:none;}
+.page-printer .stamp-badge.is-changed{animation:ppPop .35s ease;}
+@keyframes ppPop{0%{transform:scale(.85);opacity:.4;}100%{transform:scale(1);opacity:1;}}
+
+/* ---------- tombol ---------- */
+.page-printer .btn{border-radius:9px;}
+.page-printer .btn-sm{padding:7px 12px;font-size:12.5px;font-weight:600;}
+.page-printer .btn-outline{border-color:var(--pp-line-strong);background:var(--white);}
+.page-printer .btn-outline:hover{border-color:var(--ink-soft);background:#F7F9FC;}
+.page-printer .btn-icon{width:34px;height:34px;border-radius:9px;}
+.page-printer .btn-icon .icon-img{width:15px;height:15px;}
+.page-printer .actions-row{gap:8px;}
+
+/* ---------- mode grid ---------- */
+.page-printer .job-card-grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.page-printer .job-card{
+  padding:16px 16px 14px 18px;border:1px solid var(--pp-line);border-radius:12px;
+  transition:border-color .15s ease,box-shadow .15s ease;
+}
+.page-printer .job-card:hover{border-color:var(--pp-line-strong);box-shadow:0 1px 8px rgba(27,42,74,.06);}
+.page-printer .job-card .job-name{font-size:14.5px;margin-bottom:8px;}
+.page-printer .job-card-divider{border-top:1px solid var(--pp-line);margin:14px 0 12px;}
+.page-printer .job-card-price{font-size:13.5px;font-weight:600;}
+.page-printer .job-card-actions{margin-top:12px;}
+
+/* ---------- kosong & memuat ---------- */
+.page-printer .empty-state{
+  padding:26px 20px 22px;gap:8px;font-size:13.5px;color:var(--pp-muted);
+  border:1px dashed var(--pp-line-strong);border-radius:12px;background:#FAFBFD;
+}
+.page-printer .empty-state-icon,
+.page-printer .icon-img.empty-state-icon{width:34px;height:34px;opacity:.4;}
+.page-printer .skeleton-row{border-color:var(--pp-line);border-radius:12px;padding:14px 18px;}
+
+/* ---------- modal harga ---------- */
+.page-printer .modal-box{border-radius:16px;}
+
+/* ---------- fokus keyboard ---------- */
+.page-printer :is(.btn,.work-btn,.view-toggle button,.channel-back-link):focus-visible{
+  outline:2px solid var(--ink);outline-offset:2px;
+}
+
+/* ---------- responsif ---------- */
+@media (max-width:860px){
+  .page-printer .stat-grid{grid-template-columns:1fr 1fr;}
+  .page-printer .stat-tile.is-accent{grid-column:1 / -1;}
+}
+@media (max-width:600px){
+  .page-printer .wrap{padding:18px 16px 64px;}
+  .page-printer .pg-head h1{font-size:25px;}
+  .page-printer .ticket{padding:18px 16px 16px;}
+  .page-printer .work-btn{width:100%;}
+  .page-printer .job-row{flex-direction:column;align-items:stretch;gap:12px;}
+  .page-printer .job-row .actions-row{justify-content:flex-start;}
+  .page-printer .stat-value{font-size:22px;}
+  .page-printer .stat-tile.is-accent .stat-value{font-size:24px;}
+}
+
+/* ===== Ratakan: section tanpa bingkai luar (hindari kartu di dalam kartu) ===== */
+.page-printer .ticket:not(.work-card){
+  background:transparent;border:none;border-radius:0;padding:0;margin:0 0 30px;
+}
+.page-printer .section-attn.has-items{background:transparent;border:none;}
+.page-printer .section-head-row{margin-bottom:2px;}
+.page-printer .sec-sub{margin:2px 0 14px;}
+.page-printer .section-title{font-size:17px;}
+.page-printer #pendingCard .section-title{margin-bottom:0;}
+.page-printer #pendingCard > .sec-sub{margin-bottom:14px;}
+
+@media (max-width:600px){
+  .page-printer .stat-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
+  .page-printer .stat-tile{padding:12px 12px;}
+  .page-printer .stat-label{font-size:11.5px;line-height:1.3;}
+}

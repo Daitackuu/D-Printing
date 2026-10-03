@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detail Pesanan — D'Printing</title>
+<link rel="icon" type="image/png" href="../Resources/Images/Web-Logo.png">
+<link rel="apple-touch-icon" href="../Resources/Images/Web-Logo.png">
+<link rel="stylesheet" href="../CSS/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-col">
+      <div class="topbar-mini" id="topbarMini"></div>
+
+      <div class="wrap">
+        <a href="upload.html" class="job-meta channel-back-link"><span class="icon-img icon-sm" role="img" aria-label="Kembali" style="--icon:url('../Resources/Icons/Back.png')"></span> Kembali ke Upload</a>
+
+        <p class="eyebrow" style="margin-top:14px;">Detail pesanan print</p>
+        <div class="post-head" style="margin-bottom:6px;">
+          <h1 id="jobFileName" style="margin:0;">Memuat…</h1>
+          <span class="stamp-badge hidden" id="jobStatusBadge"></span>
+        </div>
+
+        <div id="jobBody">
+          <div class="skeleton-list" aria-busy="true" aria-label="Memuat"><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div><div class="skeleton-row"><div class="skeleton-col"><span class="skeleton sk-title"></span><span class="skeleton sk-line"></span></div><span class="skeleton sk-pill"></span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../JS/job.js"></script>
+</body>
+</html>

@@ -1,0 +1,3024 @@
+/* ===================================================================
+   D'Printing — design tokens
+   Palette:  --paper #EEF1F5 (bg) · --ink #1B2A4A (primary/text)
+             --stamp #C1443C (accent / status) · --gold #D4A24C (highlight)
+             --ink-soft #52607C (secondary text) · --line #C9D0DE (hairline)
+   Type: display/mono = 'IBM Plex Mono' (dispatch-ticket, dot-matrix feel)
+         body = 'IBM Plex Sans'
+   Signature: the "dispatch stamp" badge + perforated ticket divider
+   =================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+:root{
+  --paper:#EEF1F5;
+  --paper-2:#E2E7F0;
+  --ink:#1B2A4A;
+  --ink-soft:#52607C;
+  --stamp:#C1443C;
+  --gold:#D4A24C;
+  --line:#C9D0DE;
+  --white:#FFFFFF;
+  --radius:10px;
+  --mono:'IBM Plex Mono', ui-monospace, monospace;
+  --sans:'IBM Plex Sans', system-ui, sans-serif;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  animation:pageFadeIn .28s ease;
+}
+@keyframes pageFadeIn{
+  from{opacity:0;transform:translateY(4px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+a{color:inherit;}
+
+.wrap{
+  width:100%;
+  min-width:0;
+  max-width:880px;
+  margin:0 auto;
+  padding:36px 28px 80px;
+}
+
+/* ---- top bar ---- */
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:18px 20px;
+  border-bottom:1px solid var(--line);
+  background:var(--white);
+}
+.brand{
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:18px;
+  letter-spacing:.02em;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.brand .dot{width:8px;height:8px;border-radius:50%;background:var(--stamp);display:inline-block;}
+.topbar nav{display:flex;gap:18px;align-items:center;font-size:14px;color:var(--ink-soft);}
+.topbar nav a{text-decoration:none;}
+.topbar nav a:hover{color:var(--ink);}
+.role-pill{
+  font-family:var(--mono);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  background:var(--paper-2);
+  border:1px solid var(--line);
+  padding:3px 9px;
+  border-radius:20px;
+  color:var(--ink-soft);
+}
+
+/* ---- headings ---- */
+h1{
+  font-family:var(--mono);
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:-.01em;
+  margin:0 0 6px;
+}
+h2{
+  font-family:var(--mono);
+  font-size:16px;
+  font-weight:600;
+  margin:0 0 14px;
+  color:var(--ink);
+}
+.eyebrow{
+  font-family:var(--mono);
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--stamp);
+  margin:0 0 8px;
+}
+.sub{color:var(--ink-soft);font-size:14px;margin:0 0 28px;}
+
+/* ---- ticket card: the signature element ---- */
+.ticket{
+  position:relative;
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:28px 26px;
+  margin-bottom:22px;
+}
+.ticket::before, .ticket::after{
+  content:"";
+  position:absolute;
+  width:18px;height:18px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:50%;
+  top:50%;
+  transform:translateY(-50%);
+}
+.ticket::before{left:-10px;}
+.ticket::after{right:-10px;}
+.ticket .perf{
+  border-top:1px dashed var(--line);
+  margin:20px 0;
+}
+
+/* ---- buttons ---- */
+.btn{
+  font-family:var(--sans);
+  font-weight:600;
+  font-size:14px;
+  border-radius:8px;
+  border:1px solid transparent;
+  padding:12px 20px;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  transition:transform .08s ease, opacity .15s ease;
+}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--ink);color:var(--white);}
+.btn-primary:hover{opacity:.92;}
+.btn-outline{background:transparent;border-color:var(--line);color:var(--ink);}
+.btn-outline:hover{border-color:var(--ink-soft);}
+.btn-stamp{background:var(--stamp);color:var(--white);}
+.btn-stamp:hover{opacity:.92;}
+.btn-success{background:#3B7A57;color:var(--white);}
+.btn-success:hover{opacity:.92;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.btn-block{width:100%;justify-content:center;}
+
+/* Tombol ikon-doang, persegi (1:1) — dipakai buat aksi cepat kayak
+   Terima/Tolak pesanan & Mulai print/Tandai selesai, biar ringkas
+   (nggak makan tempat kalau banyak tombol berjejer). */
+.btn-icon{
+  width:38px;
+  height:38px;
+  padding:0;
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.btn-icon .icon-img{width:16px;height:16px;margin:0;}
+
+/* Varian kecil dari .btn-icon di atas — tetap persegi (1:1), cuma
+   ukurannya diperkecil biar serasi kalau ditaruh sebelahan sama tombol
+   kecil lain (mis. "Detail Info" yang pakai .btn-sm), kayak tombol
+   Batal di Riwayat print (js/home.js). */
+.btn-icon.btn-icon-sm{width:30px;height:30px;}
+.btn-icon.btn-icon-sm .icon-img{width:14px;height:14px;}
+
+/* ---- upload control: button + caret dropdown ---- */
+.upload-control{position:relative;display:inline-block;width:100%;}
+.upload-split{
+  display:flex;
+  width:100%;
+}
+.upload-split .btn-primary{
+  flex:1;
+  border-radius:8px 0 0 8px;
+  justify-content:center;
+}
+.caret-btn{
+  width:44px;
+  border-radius:0 8px 8px 0;
+  border-left:1px solid rgba(255,255,255,.25);
+  background:var(--ink);
+  color:var(--white);
+  cursor:pointer;
+  font-size:12px;
+}
+.filetype-menu{
+  position:absolute;
+  top:calc(100% + 6px);
+  right:0;
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:8px;
+  box-shadow:0 8px 24px rgba(27,42,74,.12);
+  min-width:220px;
+  display:none;
+  overflow:hidden;
+  z-index:20;
+  transform-origin:top right;
+}
+/* animasi buka: fade + geser dikit + scale, dipakai bareng juga sama
+   dropdown Ukuran kertas (.custom-select-menu) & dropdown Role di Kelola
+   User, biar animasinya konsisten satu app. */
+.filetype-menu.open{display:block;animation:customDropdownOpen .18s cubic-bezier(.2,.8,.3,1);}
+.filetype-menu button{
+  display:block;
+  width:100%;
+  text-align:left;
+  padding:11px 16px;
+  background:none;
+  border:none;
+  font-family:var(--sans);
+  font-size:14px;
+  cursor:pointer;
+  color:var(--ink);
+}
+.filetype-menu button:hover{background:var(--paper);}
+.filetype-menu button .ext{
+  font-family:var(--mono);
+  color:var(--ink-soft);
+  font-size:12px;
+  float:right;
+}
+
+.helper-text{font-size:13px;color:var(--ink-soft);margin-top:10px;}
+
+/* ---------------------------------------------------------------------
+   Dropdown custom bergaya sama & beranimasi — dipakai buat "Ukuran
+   kertas" di halaman Upload dan "Role" di Kelola User (JS/upload.js &
+   JS/users.js). Gantiin <select> bawaan browser (yang tidak bisa
+   dianimasikan/di-style penuh) dengan tombol + menu kayak
+   .filetype-menu di atas, plus item aktif dikasih tanda ✓ kayak menu
+   ganti status di halaman profil (.status-menu-item). Sengaja dibikin
+   generic (class .custom-select / .custom-select-btn / .custom-select-menu
+   / .custom-select-option) biar bisa dipakai ulang kalau nanti ada
+   dropdown lain yang butuh gaya + animasi yang sama. ---- */
+.custom-select{position:relative;}
+.custom-select-btn{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  width:100%;
+  padding:11px 13px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--white);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:14px;
+  cursor:pointer;
+  text-align:left;
+  transition:border-color .15s ease;
+}
+.custom-select-btn:hover{border-color:var(--ink-soft);}
+.custom-select.open .custom-select-btn{border-color:var(--ink-soft);}
+.custom-select-btn-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.custom-select-btn .custom-select-arrow{
+  font-size:11px;color:var(--ink-soft);flex:0 0 auto;
+  transition:transform .18s ease;
+}
+.custom-select.open .custom-select-arrow{transform:rotate(180deg);}
+.custom-select-menu{
+  position:absolute;
+  top:calc(100% + 6px);
+  left:0;right:0;
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:8px;
+  box-shadow:0 8px 24px rgba(27,42,74,.12);
+  overflow:hidden;
+  overflow-y:auto;
+  max-height:240px;
+  display:none;
+  z-index:30;
+  transform-origin:top center;
+}
+.custom-select-menu.open{display:block;animation:customDropdownOpen .18s cubic-bezier(.2,.8,.3,1);}
+@keyframes customDropdownOpen{
+  from{opacity:0;transform:translateY(-6px) scale(.98);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+.custom-select-option{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  width:100%;
+  padding:10px 13px;
+  background:none;border:none;
+  text-align:left;
+  font-family:var(--sans);font-size:14px;color:var(--ink);
+  cursor:pointer;
+  transition:background .15s ease;
+}
+.custom-select-option:hover{background:var(--paper);}
+.custom-select-option.active{font-weight:600;background:var(--paper);}
+.custom-select-option .custom-select-check{color:#3B7A57;font-weight:700;}
+/* Varian kecil, dipakai di baris Kelola User (JS/users.js) biar muat
+   sejajar sama tombol-tombol lain di baris yang sama. */
+.custom-select.custom-select-sm .custom-select-btn{padding:7px 10px;font-size:13px;}
+.custom-select.custom-select-sm .custom-select-option{padding:8px 10px;font-size:13px;}
+/* Versi "disabled" (dipakai buat baris diri sendiri di Kelola User, biar
+   developer nggak bisa turunin role dirinya sendiri) — nggak pakai
+   atribut disabled bawaan HTML karena ini bukan <select>/<button>
+   form-element, jadi ditandai lewat class ini + dicek manual di
+   wireCustomSelect() (JS/app.js) sebelum menu-nya dibuka. */
+.custom-select.is-disabled .custom-select-btn{opacity:.55;cursor:not-allowed;}
+
+/* ---- forms ---- */
+label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px;}
+input[type=email],input[type=password],input[type=text]{
+  width:100%;
+  padding:11px 13px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  font-family:var(--sans);
+  font-size:14px;
+  background:var(--white);
+  color:var(--ink);
+}
+input:focus{outline:2px solid var(--ink);outline-offset:1px;}
+
+/* ---- password field dengan tombol show/hide (ikon doang, tanpa teks) ---- */
+.password-field-wrap{position:relative;}
+.password-field-wrap input[type=password],.password-field-wrap input[type=text]{
+  padding-right:42px;
+}
+.password-toggle-btn{
+  position:absolute;
+  right:6px;
+  top:50%;
+  transform:translateY(-50%);
+  width:30px;height:30px;
+  border:none;
+  background:transparent;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  border-radius:6px;
+}
+.password-toggle-btn{transition:background .15s ease,transform .12s ease;}
+.password-toggle-btn:hover{background:var(--paper);}
+.password-toggle-btn:active{transform:translateY(-50%) scale(.86);}
+.password-toggle-btn{color:var(--ink-soft);}
+.password-toggle-btn .icon-img{width:18px;height:18px;display:block;}
+
+/* ---- kolom Web ID yang bisa dibuka/tutup (accordion) di form Daftar ---- */
+.webid-toggle-btn{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  width:100%;
+  background:transparent;
+  border:none;
+  padding:14px 0 6px;
+  margin:0;
+  font-size:13px;
+  font-weight:600;
+  color:var(--ink-soft);
+  cursor:pointer;
+  font-family:var(--sans);
+}
+.webid-toggle-btn:hover{color:var(--ink);}
+.webid-toggle-arrow{
+  display:inline-block;
+  transition:transform .2s ease;
+}
+.webid-toggle-arrow.open{transform:rotate(180deg);}
+/* overflow:hidden dibutuhkan buat animasi buka/tutup, tapi bikin cincin
+   fokus (box-shadow) input kepotong di kiri/kanan/bawah. Solusi: kasih
+   ruang 4px di sekeliling isi (padding) & tarik balik pakai margin negatif
+   supaya tata letak tidak bergeser. */
+.webid-collapse{
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  margin:0 -4px;
+  padding:0 4px;
+  transition:max-height .25s ease, opacity .2s ease, padding-bottom .25s ease;
+}
+.webid-collapse.open{max-height:320px;opacity:1;padding-bottom:4px;}
+.webid-collapse>input:first-child{margin-top:6px;}
+.webid-collapse label{margin-top:10px;}
+.webid-collapse label:first-child{margin-top:0;}
+
+/* ---- status stamp badge (signature element) ---- */
+.stamp-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  padding:5px 10px;
+  border-radius:20px;
+  border:1.5px solid currentColor;
+  transform:rotate(-2deg);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.stamp-queued{color:var(--gold);}
+.stamp-printing{color:var(--ink-soft);}
+.stamp-done{color:#3B7A57;}
+.stamp-waiting{color:var(--stamp);}
+.stamp-cancelled{color:var(--ink-soft);text-decoration:line-through;text-decoration-thickness:1.5px;}
+
+/* ---- job rows ---- */
+.job-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:14px 18px;
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+}
+.job-row+.job-row{margin-top:14px;}
+.job-row>*:first-child{min-width:0;}
+.job-meta{font-size:13px;color:var(--ink-soft);}
+
+/* ---- baris tombol aksi (Buka file/Simpan file/Detail Info/Terima/Tolak/
+   Mulai print/Tandai selesai) — sengaja dipaksa SATU GARIS (nggak boleh
+   ke-wrap ke baris baru, apalagi tombol ikon bundar sendirian nangkring
+   di bawah — jelek). Kalau kepanjangan buat muat di lebar yang ada,
+   di-scroll horizontal aja daripada wrap. ---- */
+.actions-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  min-width:0;
+  max-width:100%;
+  padding-bottom:2px;
+  scrollbar-width:thin;
+}
+.actions-row::-webkit-scrollbar{height:5px;}
+.actions-row::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+.job-note-box{
+  margin-top:8px;padding:8px 12px;background:var(--paper-2);
+  border-left:3px solid var(--stamp);border-radius:6px;
+  font-size:13px;color:var(--ink);line-height:1.45;
+}
+.job-note-box strong{color:var(--stamp);font-weight:600;}
+.job-name{font-weight:600;font-size:14px;}
+
+/* ---- Fase E: kode pesanan pendek & acak (lihat app.js#generateJobCode).
+   Dipakai buat customer/operator saling nyebut satu pesanan tanpa perlu
+   sebut nama file yang bisa panjang/mirip-mirip. ---- */
+.job-code{
+  font-family:var(--mono);
+  font-weight:700;
+  letter-spacing:.02em;
+  color:var(--stamp);
+}
+.job-code-banner{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:14px 18px;
+  margin:14px 0 20px;
+  background:var(--paper-2);
+  border:1px dashed var(--stamp);
+  border-radius:var(--radius);
+}
+.job-code-lg{font-size:19px;}
+
+/* ---- view toggle (grid/list), dipakai di halaman printer.html buat
+   "File untuk diprint" & "Riwayat selesai print" ---- */
+.section-head-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;margin-bottom:2px;
+}
+.section-head-row h2{margin:0;}
+.view-toggle{
+  display:inline-flex;
+  border:1px solid var(--line);
+  border-radius:8px;
+  overflow:hidden;
+  flex:0 0 auto;
+}
+.view-toggle button{
+  display:flex;align-items:center;justify-content:center;
+  width:34px;height:32px;
+  background:var(--white);
+  border:none;
+  cursor:pointer;
+  color:var(--ink-soft);
+  transition:background .15s ease, color .15s ease;
+}
+.view-toggle button+button{border-left:1px solid var(--line);}
+.view-toggle button:hover{background:var(--paper-2);}
+.view-toggle button.active{background:var(--ink);color:var(--white);}
+.view-toggle button svg{width:16px;height:16px;display:block;}
+
+/* ---- job card (mode grid) — versi kartu dari .job-row, isinya sama
+   (nama file, kode+meta, catatan, status, harga, tombol aksi), cuma
+   ditata vertikal di dalam kartu bergaris, biar bisa ditata grid. ---- */
+.job-card-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:14px;
+}
+.job-card{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:16px 18px;
+  display:flex;
+  flex-direction:column;
+}
+.job-card .job-name{font-size:15px;margin-bottom:4px;}
+.job-card .job-meta{line-height:1.5;}
+.job-card-divider{
+  border:none;
+  border-top:1.5px dashed var(--line);
+  margin:12px 0 10px;
+}
+.job-card-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;flex-wrap:wrap;
+}
+.job-card-price{font-family:var(--mono);font-weight:700;font-size:14px;}
+.job-card-actions{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;margin-top:12px;padding-bottom:2px;scrollbar-width:thin;}
+.job-card-actions::-webkit-scrollbar{height:5px;}
+.job-card-actions::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px;}
+
+/* ---- info detail versi kartu, dipakai di job.html (Detail Info) ----
+   Ganti dari list "label: value" polos jadi kartu bergaya sama kayak
+   job-card (nama, kode+meta, garis putus-putus, badge+harga), tapi tetap
+   nampilin SEMUA info detailnya lewat grid chip label-di-atas-value di
+   bawahnya — bukan disederhanain/dihilangin. ---- */
+.detail-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:10px;
+  margin-top:14px;
+}
+.detail-chip{
+  background:var(--paper-2);
+  border-radius:9px;
+  padding:10px 12px;
+}
+.detail-chip-label{
+  font-size:11px;color:var(--ink-soft);
+  text-transform:uppercase;letter-spacing:.04em;
+  margin-bottom:3px;
+}
+.detail-chip-value{font-size:14px;font-weight:600;word-break:break-word;}
+
+/* ---- detail pesanan print (job.html): baris label/value ---- */
+.detail-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px;}
+.detail-row:last-child{border-bottom:none;}
+.detail-row .detail-label{color:var(--ink-soft);}
+.detail-row .detail-value{font-weight:600;text-align:right;}
+
+/* ---- toggle (printer online/offline) ---- */
+.toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+  user-select:none;
+}
+.toggle-track{
+  width:42px;height:24px;
+  border-radius:20px;
+  background:var(--line);
+  position:relative;
+  transition:background .15s ease;
+}
+.toggle-track::after{
+  content:"";
+  position:absolute;
+  top:3px;left:3px;
+  width:18px;height:18px;
+  border-radius:50%;
+  background:var(--white);
+  transition:left .15s ease;
+}
+.toggle.on .toggle-track{background:#3B7A57;}
+.toggle.on .toggle-track::after{left:21px;}
+
+/* ---- table (admin) ---- */
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th{
+  text-align:left;
+  font-family:var(--mono);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--ink-soft);
+  padding:8px 6px;
+  border-bottom:1px solid var(--line);
+}
+td{padding:12px 6px;border-bottom:1px solid var(--line);}
+select{
+  font-family:var(--sans);
+  padding:7px 10px;
+  border-radius:6px;
+  border:1px solid var(--line);
+  background:var(--white);
+}
+
+/* Dropdown ukuran kertas — sengaja dibikin kecil/ngepas isi (bukan
+   full-width kayak input teks lain), soalnya isinya cuma kode ukuran
+   kertas yang pendek (A4, A5, dst), jadi kalau dilebarin penuh malah
+   aneh dan makan tempat percuma. */
+#paperSizeSelect{
+  width:auto;
+  min-width:140px;
+  max-width:220px;
+  display:block;
+}
+
+/* ---- misc ---- */
+.center-screen{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.error-msg{
+  color:var(--stamp);
+  font-size:13px;
+  margin-top:10px;
+  min-height:16px;
+}
+.empty-state{
+  text-align:center;
+  padding:40px 20px;
+  color:var(--ink-soft);
+  font-size:14px;
+}
+.hidden{display:none !important;}
+.progress-track{
+  width:100%;
+  height:6px;
+  background:var(--paper-2);
+  border-radius:6px;
+  overflow:hidden;
+  margin-top:12px;
+}
+.progress-fill{
+  height:100%;
+  background:var(--stamp);
+  width:0%;
+  transition:width .2s ease;
+}
+
+/* ---- app shell: discord-style left sidebar + slim top strip ---- */
+.app-shell{display:flex;min-height:100vh;align-items:stretch;}
+.sidebar{
+  width:264px;
+  flex:0 0 264px;
+  background:var(--ink);
+  color:var(--paper);
+  display:flex;
+  flex-direction:column;
+  padding:20px 14px;
+  gap:4px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  height:100dvh;
+  overflow-y:auto;
+}
+.sidebar .brand{color:var(--white);padding:8px 10px 20px;font-size:18px;text-decoration:none;}
+.sidebar .brand .dot{background:var(--gold);}
+.side-link{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:8px;
+  text-decoration:none;
+  color:var(--paper-2);
+  font-size:15px;
+  font-weight:500;
+  cursor:pointer;
+  border:none;
+  background:none;
+  width:100%;
+  text-align:left;
+  font-family:var(--sans);
+}
+.side-link:hover{background:rgba(255,255,255,.08);color:var(--white);}
+.side-link.active{background:var(--stamp);color:var(--white);font-weight:600;}
+.side-icon{font-size:18px;width:24px;text-align:center;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;}
+
+/* Badge gembok kecil di sebelah nav item yang masih dikunci buat guest
+   (Komunitas/Pesan sebelum login — lihat js/shell.js). Ikon doang (Lock.png,
+   BUKAN emoji), teks lengkap "Login untuk fitur lengkap" ditaruh di
+   title="" (muncul sebagai tooltip) supaya nav item tetap ringkas. */
+.locked-badge{
+  margin-left:auto;
+  display:inline-flex;
+  align-items:center;
+  opacity:.55;
+  flex-shrink:0;
+}
+.locked-badge .icon-img{width:13px;height:13px;}
+
+/* Banner kecil "ini baru preview" di halaman yang bisa diakses guest
+   (mis. upload.html) — ikon gembok + teks singkat, dipakai bareng kelas
+   .ticket yang sudah ada biar gaya kartunya konsisten. */
+.preview-banner{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px;
+  font-size:13px;
+  color:var(--ink-soft);
+  background:var(--white);
+  border-style:solid;
+  border-left:3px solid var(--gold);
+  box-shadow:0 4px 12px rgba(27,42,74,.05);
+}
+.preview-banner::before,.preview-banner::after{display:none;}
+.preview-banner .icon-img{flex-shrink:0;opacity:.7;}
+.preview-banner a{color:var(--stamp);font-weight:600;text-decoration:none;}
+.preview-banner a:hover{text-decoration:underline;}
+
+/* ---- Fase D: semua emoji diganti gambar (lihat js/app.js#iconImg) ---- */
+.icon-img{
+  width:20px;height:20px;vertical-align:middle;display:inline-block;flex:none;
+  /* warna ikon = warna teks sekitarnya (currentColor) lewat mask PNG */
+  background-color:currentColor;
+  -webkit-mask:var(--icon) center/contain no-repeat;
+          mask:var(--icon) center/contain no-repeat;
+}
+.icon-img.icon-sm{width:16px;height:16px;}
+.icon-img.icon-lg{width:28px;height:28px;}
+.side-icon .icon-img{width:20px;height:20px;}
+.btn .icon-img{width:16px;height:16px;margin-right:2px;}
+.side-spacer{flex:1;}
+.side-role-pill{
+  font-family:var(--mono);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--paper-2);
+  padding:4px 12px 10px;
+}
+
+/* ---- panel user bawah sidebar ala Discord: avatar + username + role ---- */
+/* Dibungkus .sidebar-user-wrap: panel profil (link) + tombol titik-tiga di
+   kanannya; menu akun (.account-menu) muncul KE ATAS dari wrap ini. */
+.sidebar-user-wrap{position:relative;margin-top:6px;flex-shrink:0;}
+.sidebar-user-row{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  border-radius:10px;
+  background:rgba(255,255,255,.06);
+  transition:background .15s ease;
+}
+.sidebar-user-row:hover, .sidebar-user-row.active{background:rgba(255,255,255,.14);}
+.sidebar-user-panel{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  flex:1;
+  min-width:0;
+  border-radius:10px;
+  text-decoration:none;
+  color:var(--white);
+}
+.sidebar-user-more{
+  position:relative;
+  flex-shrink:0;
+  width:34px;height:34px;
+  margin-right:8px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:0;border-radius:8px;
+  background:transparent;color:var(--white);cursor:pointer;
+  transition:background .15s ease;
+}
+.sidebar-user-more:hover, .sidebar-user-more.is-open{background:rgba(255,255,255,.18);}
+.sidebar-user-more .icon-img{width:20px;height:20px;margin:0;}
+/* Titik merah penanda kabar belum dibaca. Selektornya sengaja dibuat lebih
+   spesifik (.sidebar-user-more .side-more-dot) karena class .badge (min-width
+   & height 18px) didefinisikan LEBIH BAWAH di file ini dan sebelumnya menimpa
+   ukuran titik, sehingga titiknya jadi besar dan menutupi ikon titik-tiga. */
+.sidebar-user-more .side-more-dot{
+  position:absolute;top:3px;right:3px;
+  box-sizing:border-box;
+  width:10px;height:10px;min-width:10px;max-width:10px;padding:0;margin:0;
+  font-size:0;line-height:0;
+  border-radius:50%;background:var(--stamp);border:2px solid var(--ink);
+  pointer-events:none;
+}
+.sidebar-user-more .side-more-dot.hidden{display:none;}
+.account-menu{
+  /* Dibikin ringkas: menyisakan jarak 8px dari tepi sidebar (bukan penuh
+     kiri-kanan) & item lebih rapat, supaya menu Nav di belakangnya tidak
+     tertutup semua. */
+  position:absolute;left:8px;right:8px;bottom:calc(100% + 6px);
+  display:flex;flex-direction:column;gap:1px;
+  background:var(--white);color:var(--ink);
+  border:1px solid var(--line);border-radius:10px;
+  padding:4px;box-shadow:0 8px 22px rgba(27,42,74,.24);
+  transform-origin:bottom center;
+  animation:bubbleMenuUp .16s cubic-bezier(.2,.8,.3,1);
+  z-index:30;
+}
+.account-menu.hidden{display:none;}
+.account-menu-item{
+  display:flex;align-items:center;gap:9px;width:100%;
+  padding:7px 10px;border:0;border-radius:7px;
+  background:transparent;color:var(--ink);
+  font:inherit;font-size:13px;font-weight:600;text-align:left;
+  text-decoration:none;cursor:pointer;transition:background .15s ease;
+}
+.account-menu-item:hover, .account-menu-item.active{background:var(--paper);}
+.account-menu-item:disabled{opacity:.6;cursor:default;}
+.account-menu-item.is-danger{color:var(--stamp);}
+.account-menu-item .side-icon{display:inline-flex;}
+.account-menu-item .icon-img{width:16px;height:16px;margin:0;}
+.account-menu-item .side-mail-badge{margin-left:auto;}
+.account-menu-sep{height:1px;background:var(--paper-2);margin:3px 6px;}
+.account-menu-label{
+  padding:5px 10px 1px;font-size:10px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-soft);
+}
+
+/* ---- modal Switch account ---- */
+.switch-list{display:flex;flex-direction:column;gap:6px;}
+.switch-row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;}
+.switch-row.is-current{background:var(--paper);}
+.switch-row-btn{
+  display:flex;align-items:center;gap:10px;flex:1;min-width:0;
+  padding:0;border:0;background:transparent;font:inherit;color:inherit;
+  text-align:left;cursor:pointer;
+}
+.switch-item:hover > .switch-row{background:var(--paper);}
+.switch-row-info{display:flex;flex-direction:column;min-width:0;}
+.switch-row-name{font-weight:600;font-size:14px;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.switch-row-sub{font-size:12.5px;color:var(--ink-soft);}
+.switch-current-tag{margin-left:auto;font-size:11px;font-weight:700;color:var(--ink-soft);}
+.switch-forget{
+  border:0;background:transparent;color:var(--ink-soft);font-size:20px;
+  line-height:1;cursor:pointer;padding:4px 8px;border-radius:6px;
+}
+.switch-forget:hover{background:var(--paper-2);color:var(--stamp);}
+.switch-add-icon{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px dashed var(--line);font-size:20px;color:var(--ink-soft);
+}
+.switch-form{display:flex;gap:8px;padding:0 8px 8px 8px;flex-wrap:wrap;}
+.switch-form.hidden{display:none;}
+.switch-form input{flex:1;min-width:120px;margin:0;}
+
+/* ---- modal Settings (Suara & Notifikasi browser) ---- */
+.settings-row{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:12px 0;border-bottom:1px solid var(--paper-2);cursor:pointer;
+}
+.settings-row:last-of-type{border-bottom:0;}
+.settings-row-text{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.settings-row-title{font-weight:600;font-size:14px;color:var(--ink);}
+.settings-row-desc{font-size:12.5px;color:var(--ink-soft);line-height:1.4;}
+.settings-switch{
+  appearance:none;-webkit-appearance:none;flex-shrink:0;
+  width:40px;height:22px;margin:0;border-radius:999px;
+  background:var(--line);position:relative;cursor:pointer;
+  transition:background .15s ease;
+}
+.settings-switch::after{
+  content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;
+  background:var(--white);box-shadow:0 1px 3px rgba(27,42,74,.3);
+  transition:transform .15s ease;
+}
+.settings-switch:checked{background:var(--ink);}
+.settings-switch:checked::after{transform:translateX(18px);}
+.settings-switch:disabled{opacity:.5;cursor:not-allowed;}
+.settings-switch:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+.sidebar-user-panel .avatar-circle{flex-shrink:0;}
+.sidebar-user-panel-info{min-width:0;flex:1;}
+.sidebar-user-panel-name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-user-panel-role{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--paper-2);opacity:.8;}
+
+.main-col{flex:1;min-width:0;display:flex;flex-direction:column;}
+
+/* ---- slim top strip: only avatar + "Profil" ---- */
+.topbar-mini{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  padding:16px 28px;
+  border-bottom:1px solid var(--line);
+  background:var(--white);
+}
+.topbar-mini-link{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  color:var(--ink);
+  font-size:14px;
+  font-weight:600;
+  padding:6px 10px;
+  border-radius:20px;
+  border:none;
+  background:transparent;
+  font-family:var(--sans);
+  cursor:pointer;
+}
+.topbar-mini-link:hover{background:var(--paper);}
+.avatar-circle{
+  width:32px;height:32px;
+  border-radius:50%;
+  background:var(--stamp);
+  color:var(--white);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--mono);
+  font-weight:700;
+  font-size:13px;
+  flex-shrink:0;
+}
+.avatar-circle.lg{width:88px;height:88px;font-size:30px;}
+.avatar-circle.sm{width:42px;height:42px;font-size:16px;}
+
+/* ============ Bubble menu mengambang (khusus developer) ============ */
+.dev-bubble-wrap{position:fixed;right:22px;bottom:22px;z-index:80;display:flex;flex-direction:column;align-items:flex-end;gap:12px;}
+.dev-bubble-fab{
+  width:52px;height:52px;border-radius:50%;border:none;background:var(--ink);
+  color:var(--white);font-size:22px;cursor:pointer;box-shadow:0 6px 18px rgba(27,42,74,.35);
+  display:flex;align-items:center;justify-content:center;transition:transform .18s ease, background .18s ease;
+}
+.dev-bubble-fab:hover{background:var(--stamp);}
+.dev-bubble-fab.is-open{transform:rotate(90deg);}
+.dev-bubble-menu{
+  display:flex;flex-direction:column;gap:6px;background:var(--white);border:1px solid var(--line);
+  border-radius:var(--radius);padding:8px;box-shadow:0 10px 30px rgba(27,42,74,.18);min-width:180px;
+  transform-origin:bottom right;
+  animation:bubbleMenuUp .18s cubic-bezier(.2,.8,.3,1);
+}
+.dev-bubble-menu.hidden{display:none;}
+@keyframes bubbleMenuUp{
+  from{opacity:0;transform:translateY(10px) scale(.96);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+.dev-bubble-item{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;
+  text-decoration:none;color:var(--ink);font-size:14px;font-weight:600;transition:background .15s ease;
+}
+.dev-bubble-item:hover{background:var(--paper);}
+
+/* ============ Kelola User (users.html) ============ */
+.user-mgmt-list{display:flex;flex-direction:column;gap:8px;}
+.user-mgmt-row{
+  display:flex;align-items:center;gap:12px 16px;padding:12px 14px;border:1px solid var(--line);
+  border-radius:var(--radius);background:var(--white);
+  /* flex-wrap: di layar sempit grup tombol (.user-mgmt-actions) jatuh ke
+     baris sendiri di bawah identitas, bukan kepotong/numpuk. */
+  flex-wrap:wrap;
+}
+.user-mgmt-row.is-banned{opacity:.6;background:var(--paper);}
+.user-mgmt-identity{display:flex;align-items:center;gap:12px;flex:1 1 260px;min-width:0;text-decoration:none;color:var(--ink);}
+.user-mgmt-identity:hover .user-mgmt-name{text-decoration:underline;}
+.user-mgmt-info{flex:1;min-width:0;}
+.user-mgmt-name-line{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;}
+.user-mgmt-name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.user-mgmt-me-tag{font-size:11px;font-weight:600;color:var(--ink-soft);}
+.user-mgmt-email{font-size:12px;color:var(--ink-soft);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.user-mgmt-row .status-pill{display:inline-flex;font-size:11px;padding:2px 8px;}
+/* Grup tombol aksi: rapat di kanan, tinggi & jarak seragam. */
+.user-mgmt-actions{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:8px;margin-left:auto;}
+.user-mgmt-actions .btn{white-space:nowrap;}
+@media (max-width:1200px){
+  .user-mgmt-actions{width:100%;justify-content:flex-start;margin-left:0;padding-top:12px;border-top:1px dashed var(--line);}
+}
+/* Dulu <select> bawaan browser, sekarang dropdown custom beranimasi
+   (.custom-select, lihat definisinya dekat .filetype-menu) — class
+   .user-mgmt-role ditaruh di wrapper-nya, cuma buat ngunci lebar biar
+   pas sejajar sama tombol-tombol lain di baris (bukan full-width kayak
+   .custom-select bawaan). */
+.user-mgmt-role{width:136px;flex:0 0 auto;}
+.user-mgmt-row.is-me .user-mgmt-role{opacity:.55;pointer-events:none;}
+.btn-sm{padding:6px 10px;font-size:12px;}
+.ban-badge{color:var(--stamp);font-size:11px;font-weight:700;text-transform:uppercase;}
+
+/* ============ Kelola User: kategori & status ============ */
+.status-pill{
+  display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;
+  border-radius:999px;background:var(--paper);color:var(--ink-soft);
+}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--ink-soft);flex-shrink:0;}
+.status-pill.is-online{color:#3B7A57;background:rgba(59,122,87,.12);}
+.status-pill.is-online .status-dot{background:#3B7A57;}
+.status-pill.is-offline .status-dot{background:var(--ink-soft);}
+.status-pill.is-dnd{color:#C43D3D;background:rgba(196,61,61,.12);}
+.status-pill.is-dnd .status-dot{background:#C43D3D;}
+.status-dot.is-online{background:#3B7A57;}
+.status-dot.is-dnd{background:#C43D3D;}
+.status-dot.is-offline{background:var(--ink-soft);}
+.usercat-tabs{margin-top:14px;overflow-x:auto;}
+.usercat-tabs .tab-btn{white-space:nowrap;}
+.usercat-section{margin-top:22px;}
+.usercat-title{display:flex;align-items:center;gap:8px;font-size:16px;margin:0 0 10px;}
+.usercat-count{
+  display:inline-block;min-width:20px;padding:1px 7px;border-radius:999px;
+  background:var(--paper);color:var(--ink-soft);font-size:11px;font-weight:700;text-align:center;
+}
+.usercat-online{margin-left:auto;font-size:12px;font-weight:600;color:#3B7A57;}
+
+/* ---- hamburger button: cuma kelihatan di mobile (lihat media query di
+   bawah), dipasang di topbar-mini sebelah kiri. 3 garis polos pakai CSS,
+   nggak butuh aset ikon. ---- */
+.mobile-menu-btn{
+  display:none;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+  width:40px;height:40px;
+  border:none;
+  background:transparent;
+  border-radius:8px;
+  cursor:pointer;
+  flex-shrink:0;
+}
+.mobile-menu-btn:hover{background:var(--paper);}
+.mobile-menu-btn span{
+  display:block;width:20px;height:2px;border-radius:2px;background:var(--ink);
+  transition:transform .2s ease, opacity .2s ease;
+}
+.mobile-menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+.mobile-menu-btn[aria-expanded="true"] span:nth-child(2){opacity:0;}
+.mobile-menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+
+/* ---- backdrop di belakang drawer, dipakai buat nutup drawer pas
+   di-tap (di luar drawer) ---- */
+.sidebar-backdrop{
+  position:fixed;inset:0;
+  background:rgba(20,20,25,.45);
+  z-index:190;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease;
+}
+.sidebar-backdrop.is-open{opacity:1;pointer-events:auto;}
+
+@media (max-width:760px){
+  .app-shell{flex-direction:column;}
+
+  /* Sidebar TIDAK lagi nempel jadi baris navigasi di atas layar (makan
+     tempat, kepotong-potong pas discroll horizontal). Sekarang jadi
+     drawer yang mengambang di atas konten, disembunyikan di luar layar
+     sampai tombol hamburger di topbar-mini ditekan — ala menu riwayat
+     chat di app Claude versi mobile. */
+  .sidebar{
+    position:fixed;
+    top:0;left:0;
+    width:min(300px,84vw);
+    flex:none;
+    /* 100vh di HP ikut ngitung area yang ketutup address bar browser,
+       jadi lebih tinggi dari layar yang beneran kelihatan -> konten yang
+       nempel di bawah (tombol Masuk/Daftar / panel profil, lewat
+       .side-spacer flex:1) kepotong ke luar layar & baru kelihatan kalau
+       discroll. 100dvh ngikutin tinggi layar YANG BENERAN kelihatan saat
+       itu, jadi drawer selalu pas & gak perlu discroll buat lihat bagian
+       bawahnya. Baris 100vh dibiarin duluan sebagai fallback buat browser
+       lama yang belum kenal dvh (browser gitu bakal skip baris dvh). */
+    height:100vh;
+    height:100dvh;
+    z-index:200;
+    flex-direction:column;
+    align-items:stretch;
+    padding:20px 14px;
+    gap:4px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    transform:translateX(-100%);
+    transition:transform .25s cubic-bezier(.2,.8,.3,1);
+    box-shadow:10px 0 30px rgba(0,0,0,.25);
+  }
+  .sidebar.is-open{transform:translateX(0);}
+  .sidebar .brand{padding:8px 10px 20px;display:block;}
+  .side-spacer{display:block;}
+  .side-role-pill{display:block;}
+  .side-link{white-space:normal;padding:12px 14px;}
+  .sidebar-user-wrap{margin-top:6px;flex-shrink:0;}
+  .sidebar-user-panel-role{display:block;}
+
+  /* Topbar-mini sekarang isinya 2 tombol: hamburger (kiri) & Kontak CS
+     (kanan) — jauh lebih ramping daripada baris nav penuh, jadi lebih
+     banyak ruang layar buat konten halaman. */
+  .topbar-mini{justify-content:space-between;}
+  .mobile-menu-btn{display:flex;}
+}
+
+/* ---- mobile: touch targets, spacing, and layout that needs more than
+   the sidebar/chat rules above to feel native on a phone ---- */
+@media (max-width:600px){
+  .wrap{padding:20px 16px 60px;}
+  h1{font-size:22px;}
+  .ticket{padding:18px 16px;margin-bottom:16px;}
+  .ticket::before,.ticket::after{display:none;}
+  .topbar-mini{padding:12px 16px;}
+
+  .btn,input[type=email],input[type=password],input[type=text],
+  select,.filetype-menu button,.tab-btn{min-height:44px;}
+  .btn{padding:10px 16px;}
+
+  .modal-box{max-width:94vw;padding:20px;}
+  .filetype-menu{left:0;right:0;min-width:0;}
+
+  .profile-head-row{flex-direction:column;align-items:flex-start;gap:12px;}
+  .profile-head-row > div[style]{width:100%;}
+  #profileCard [style*="display:flex"][style*="flex-wrap:wrap"]{width:100%;}
+  #profileCard .btn{flex:1;justify-content:center;}
+
+  .post-grid{gap:10px;}
+
+  .job-row{flex-wrap:wrap;gap:8px;}
+
+  #accountCard div[style*="display:flex"]{flex-direction:column;}
+  #accountCard .btn{width:100%;justify-content:center;}
+
+  .ticket table{display:block;overflow-x:auto;white-space:nowrap;}
+}
+
+/* ---- modal overlay (dipakai upload, buat channel, dst) ---- */
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:rgba(27,42,74,.55);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  z-index:100;
+}
+.modal-backdrop.hidden{display:none;}
+/* Animasi masuk buat SEMUA popup/modal di seluruh halaman — otomatis
+   jalan tiap kali class "hidden" dilepas, tanpa perlu ubah JS di
+   halaman mana pun (profile.js, shell.js, home.js, dst semua kepakai). */
+.modal-backdrop:not(.hidden){animation:modalBackdropFadeIn .18s ease;}
+.modal-backdrop:not(.hidden) .modal-box{animation:modalBoxPopIn .22s cubic-bezier(.2,.8,.3,1);}
+@keyframes modalBackdropFadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes modalBoxPopIn{
+  from{opacity:0;transform:translateY(10px) scale(.96);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+.modal-box{
+  background:var(--white);
+  border-radius:var(--radius);
+  padding:26px;
+  max-width:380px;
+  width:100%;
+  box-shadow:0 20px 60px rgba(27,42,74,.25);
+}
+.modal-box h3{font-family:var(--mono);font-size:17px;margin:0 0 10px;}
+.modal-box p{font-size:14px;color:var(--ink-soft);margin:0 0 20px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+
+/* ---- popup notif "pesanan belum diterima" (Dashboard Operator) ----
+   Dibikin ringkas lagi (kayak versi awal) — cuma ditambah badge ID
+   kecil per file, jangan sampai toast-nya jadi gede & makan tempat. */
+.pending-toast-wrap{
+  position:fixed;top:20px;right:20px;z-index:110;
+  display:flex;flex-direction:column;gap:10px;max-width:340px;width:calc(100% - 40px);
+}
+.pending-toast{
+  background:var(--white);border:1px solid var(--line);border-left:4px solid var(--stamp);
+  border-radius:var(--radius);box-shadow:0 16px 40px rgba(27,42,74,.22);
+  padding:14px 16px;display:flex;gap:12px;align-items:flex-start;
+  animation:pendingToastIn .22s cubic-bezier(.2,.8,.3,1);
+}
+.pending-toast.is-leaving{animation:pendingToastOut .16s ease forwards;}
+@keyframes pendingToastIn{from{opacity:0;transform:translateX(16px) scale(.98);}to{opacity:1;transform:translateX(0) scale(1);}}
+@keyframes pendingToastOut{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(16px);}}
+.pending-toast-icon{width:22px;height:22px;flex:none;margin-top:2px;}
+.pending-toast-body{flex:1;min-width:0;}
+.pending-toast-title{font-family:var(--mono);font-weight:700;font-size:14px;margin:0 0 4px;}
+.pending-toast-text{font-size:13px;color:var(--ink-soft);margin:0;line-height:1.5;}
+.pending-toast-filechip{color:var(--ink);font-weight:500;}
+.pending-toast-id{
+  font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.02em;
+  color:var(--stamp);background:rgba(193,68,60,.09);border-radius:5px;padding:1px 5px;
+  margin-left:1px;white-space:nowrap;
+}
+.pending-toast-actions{display:flex;gap:8px;margin-top:10px;}
+.pending-toast-actions .btn{padding:7px 12px;font-size:12px;}
+.pending-toast-close{
+  flex:none;border:none;background:transparent;cursor:pointer;color:var(--ink-soft);
+  font-size:16px;line-height:1;padding:2px;border-radius:6px;
+}
+.pending-toast-close:hover{background:var(--paper);color:var(--ink);}
+
+/* ---- varian toast umum (showToast di app.js) ---- */
+.pending-toast.toast-success{border-left-color:#2E8B57;}
+.pending-toast.toast-error{border-left-color:var(--stamp);}
+.pending-toast.toast-info{border-left-color:var(--ink);}
+.pending-toast.toast-warning{border-left-color:var(--gold);}
+.pending-toast.toast-status{border-left-color:var(--gold);}
+
+@media (max-width:480px){
+  .pending-toast-wrap{top:12px;right:12px;left:12px;max-width:none;width:auto;}
+}
+
+/* ---- tabs (Pesan: Obrolan / Teman) ---- */
+.tabs-row{display:flex;gap:6px;margin-bottom:20px;border-bottom:1px solid var(--line);}
+.tab-btn{
+  font-family:var(--sans);
+  font-weight:600;
+  font-size:14px;
+  padding:10px 16px;
+  background:none;
+  border:none;
+  border-bottom:2px solid transparent;
+  color:var(--ink-soft);
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.tab-btn:hover{color:var(--ink);}
+.tab-btn.active{color:var(--ink);border-bottom-color:var(--stamp);}
+.badge{
+  background:var(--stamp);
+  color:var(--white);
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:700;
+  min-width:18px;
+  height:18px;
+  border-radius:9px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 5px;
+}
+
+/* ---- teman: request & friend rows ---- */
+.friend-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 0;border-bottom:1px solid var(--line);
+}
+.friend-row:last-child{border-bottom:none;}
+.friend-row-info{display:flex;align-items:center;gap:10px;}
+.friend-row-info a{text-decoration:none;color:var(--ink);font-weight:600;font-size:14px;}
+.friend-row-actions{display:flex;gap:8px;}
+
+/* ---- tambah teman lewat username ---- */
+.add-friend-row{display:flex;gap:10px;align-items:stretch;}
+.add-friend-input{
+  position:relative;flex:1;min-width:0;display:flex;align-items:center;
+  border:1px solid var(--line);border-radius:8px;background:var(--white);
+}
+.add-friend-input:focus-within{outline:2px solid var(--ink);outline-offset:1px;}
+.add-friend-at{padding-left:13px;color:var(--ink-soft);font-family:var(--mono);font-weight:700;}
+.add-friend-input input{
+  flex:1;min-width:0;border:none;outline:none;background:transparent;
+  padding:10px 13px 10px 4px;font-family:var(--sans);font-size:14px;color:var(--ink);
+}
+.add-friend-status{margin-top:10px;font-size:13px;color:var(--ink-soft);}
+.add-friend-status.is-error{color:var(--stamp);}
+.add-friend-status.is-success{color:#1f7a4d;font-weight:600;}
+@media (max-width:480px){
+  .add-friend-row{flex-direction:column;}
+}
+
+/* ---- search box (messages / user search) ---- */
+.search-box{position:relative;margin-bottom:12px;}
+.search-box input{
+  width:100%;
+  padding:10px 13px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  font-family:var(--sans);
+  font-size:14px;
+  background:var(--white);
+  color:var(--ink);
+}
+.search-box input:focus{outline:2px solid var(--ink);outline-offset:1px;}
+.search-results{
+  border:1px solid var(--line);
+  border-radius:8px;
+  margin-top:6px;
+  overflow:hidden;
+}
+.search-result-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 10px;
+  cursor:pointer;
+  font-size:14px;
+}
+.search-result-item:hover{background:var(--paper);}
+
+/* ---- community: channel directory (ala Discord channel list) ---- */
+.channel-list-row{
+  display:flex;align-items:center;gap:16px;
+  padding:18px 20px;margin-bottom:10px;
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+  text-decoration:none;color:var(--ink);
+  transition:border-color .15s ease, transform .15s ease, background .15s ease;
+}
+.channel-list-row:hover{border-color:var(--stamp);background:var(--paper);transform:translateX(2px);}
+.channel-hash-icon{
+  width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--white);
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:16px;
+  flex-shrink:0;
+}
+.channel-hash-icon.lg{width:88px;height:88px;font-size:32px;}
+.channel-list-info{flex:1;min-width:0;}
+.channel-card-name{font-weight:600;font-size:16px;}
+.channel-card-desc{font-size:13.5px;color:var(--ink-soft);margin-top:3px;}
+.channel-open-arrow{color:var(--ink-soft);font-size:20px;flex-shrink:0;}
+
+/* ---- channel chat room ala WhatsApp/Discord (bubble kiri/kanan) ---- */
+.channel-wrap{max-width:960px;}
+.channel-back-link{text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.channel-head-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:16px;padding-bottom:20px;border-bottom:1px solid var(--line);}
+.channel-head-identity{display:flex;align-items:center;gap:16px;min-width:0;}
+.channel-head-identity h1{font-size:26px;}
+.channel-owner-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.channel-chat-box{display:flex;flex-direction:column;padding:20px;}
+.channel-msgs{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding:12px 8px;min-height:60vh;max-height:calc(100vh - 320px);background:var(--paper);border-radius:8px;}
+.chat-bubble-row{display:flex;align-items:flex-end;gap:10px;max-width:72%;}
+.chat-bubble-row.is-theirs{align-self:flex-start;animation:msgSlideInLeft .22s ease;}
+.chat-bubble-row.is-mine{align-self:flex-end;flex-direction:row-reverse;animation:msgSlideInRight .22s ease;}
+.chat-avatar-link{flex-shrink:0;line-height:0;}
+.chat-bubble{
+  padding:10px 14px;border-radius:14px;font-size:14.5px;position:relative;
+  background:var(--white);border:1px solid var(--line);
+}
+.chat-bubble-row.is-mine .chat-bubble{background:var(--ink);color:var(--white);border-color:var(--ink);}
+.chat-bubble .msg-author{font-weight:600;font-size:12.5px;display:block;color:var(--stamp);margin-bottom:3px;text-decoration:none;}
+.chat-bubble .msg-author:hover{text-decoration:underline;}
+.chat-bubble .msg-text{white-space:pre-wrap;}
+.chat-bubble .msg-time{display:block;font-size:10.5px;opacity:.65;margin-top:4px;text-align:right;}
+@keyframes msgSlideInLeft{from{opacity:0;transform:translateX(-14px);}to{opacity:1;transform:translateX(0);}}
+@keyframes msgSlideInRight{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:translateX(0);}}
+
+
+/* ---- community: posts ---- */
+.post-textarea{
+  width:100%;
+  padding:12px 13px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  font-family:var(--sans);
+  font-size:14px;
+  background:var(--white);
+  color:var(--ink);
+  resize:vertical;
+}
+.post-textarea:focus{outline:2px solid var(--ink);outline-offset:1px;}
+.post-card{margin-bottom:14px;}
+.post-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.post-author{font-weight:600;color:var(--ink);}
+.post-text{font-size:14px;margin:10px 0 14px;white-space:pre-wrap;}
+.post-card-img{width:100%;border-radius:8px;display:block;margin-bottom:12px;cursor:pointer;max-height:420px;object-fit:cover;}
+.post-actions{display:flex;gap:10px;}
+.like-btn[data-liked="true"]{border-color:var(--stamp);color:var(--stamp);}
+.post-compose-bar{
+  width:100%;display:flex;align-items:center;gap:12px;text-align:left;
+  cursor:pointer;font-family:var(--sans);font-size:14px;color:var(--ink-soft);
+  margin-bottom:14px;background:var(--white);
+}
+.post-compose-bar span:not(.plus){flex:1;}
+.post-compose-bar .plus{font-size:20px;color:var(--ink-soft);}
+.post-compose-bar:hover{border-color:var(--ink-soft);}
+
+/* ---- profile ---- */
+#profileCard h1{font-size:22px;}
+.avatar-edit-wrap{position:relative;width:96px;height:96px;flex-shrink:0;cursor:pointer;}
+.avatar-edit-wrap .avatar-circle.lg{width:96px;height:96px;font-size:34px;}
+.status-dot-badge{
+  position:absolute;bottom:2px;right:2px;width:18px;height:18px;border-radius:50%;
+  border:3px solid var(--white);background:var(--ink-soft);
+}
+.status-dot-badge.is-online{background:#3B7A57;}
+.status-dot-badge.is-dnd{background:#C43D3D;}
+.status-dot-badge-clickable{cursor:pointer;}
+.status-pill-clickable{cursor:pointer;user-select:none;}
+.status-pill-clickable:hover{filter:brightness(.95);}
+.status-pill-arrow{font-size:10px;opacity:.7;}
+
+/* ---- isi modal ganti status profil (Online/Do Not Disturb/Offline) —
+   modal-nya sendiri (backdrop + kotak + animasi fade/pop-in + responsive
+   di HP) dipakai bareng dari .modal-backdrop/.modal-box, lihat di atas,
+   biar konsisten sama modal lain di app ini (postingan baru, dst). ---- */
+.status-modal-box h3{margin-bottom:14px;}
+.status-menu-item{
+  display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:8px;
+  background:none;border:none;font:inherit;font-size:14px;color:var(--ink);cursor:pointer;text-align:left;
+  transition:background .15s ease;
+}
+.status-menu-item + .status-menu-item{margin-top:2px;}
+.status-menu-item:hover{background:var(--paper);}
+.status-menu-item.active{font-weight:600;background:var(--paper);}
+.status-menu-check{margin-left:auto;color:#3B7A57;font-weight:700;}
+.avatar-edit-overlay{
+  position:absolute;inset:0;
+  border-radius:50%;
+  background:rgba(27,42,74,.55);
+  color:var(--white);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;text-align:center;
+  opacity:0;transition:opacity .15s ease;
+}
+.avatar-edit-wrap:hover .avatar-edit-overlay{opacity:1;}
+.profile-head-row{display:flex;gap:20px;align-items:flex-start;}
+
+/* ---- profile: post feed (Discord card + IG media/like) ---- */
+.post-grid{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+/* ---- post detail modal (komentar) ---- */
+.post-detail-img{width:100%;border-radius:8px;margin-bottom:12px;display:block;}
+.post-detail-text{font-size:14px;white-space:pre-wrap;margin:0 0 14px;}
+.comment-list{display:flex;flex-direction:column;gap:10px;margin:14px 0;max-height:220px;overflow-y:auto;}
+.comment-item{font-size:13px;display:flex;gap:8px;align-items:flex-start;}
+.comment-author{font-weight:600;margin-right:6px;}
+.comment-form{display:flex;gap:8px;}
+.comment-form input{flex:1;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:var(--sans);font-size:13px;}
+
+/* ---- messages / DM ---- */
+.chat-layout{display:flex;gap:18px;align-items:flex-start;}
+.chat-list{flex:0 0 300px;max-height:calc(100vh - 340px);min-height:420px;overflow-y:auto;padding:14px;}
+.chat-pane{flex:1;display:flex;flex-direction:column;height:calc(100vh - 340px);min-height:420px;padding:14px;}
+.conv-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:14px;
+  text-decoration:none;
+  color:var(--ink);
+}
+.conv-item:hover{background:var(--paper);}
+.conv-item.active{background:var(--paper-2);font-weight:600;}
+.conv-item-info{flex:1;min-width:0;}
+.conv-item-name{font-weight:600;font-size:14px;}
+.conv-item .conv-preview{display:block;font-size:12px;color:var(--ink-soft);font-weight:400;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chat-header{font-weight:600;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:12px;}
+.chat-header-identity{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-size:16px;font-weight:600;}
+.chat-header-identity:hover{text-decoration:underline;}
+.chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px 2px;}
+.chat-back-btn{display:none;}
+.chat-input-row{display:flex;gap:8px;margin-top:12px;}
+.chat-input-row input{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:8px;font-family:var(--sans);font-size:14.5px;}
+@media (max-width:640px){
+  .chat-layout{flex-direction:column;position:relative;}
+  .chat-list{flex:none;width:100%;max-height:none;height:calc(100vh - 300px);}
+  .chat-pane{width:100%;height:calc(100vh - 300px);display:none;}
+  .chat-layout.conv-open .chat-list{display:none;}
+  .chat-layout.conv-open .chat-pane{display:flex;}
+  .chat-back-btn{
+    display:inline-flex;align-items:center;gap:4px;align-self:flex-start;
+    background:none;border:none;font-family:var(--sans);font-weight:600;font-size:14px;
+    color:var(--ink);cursor:pointer;padding:4px 0 10px;
+  }
+}
+
+/* ===================================================================
+   Landing page publik (home.html) — pakai palet & bahasa desain yang
+   sama dengan app (tiket pos/dispatch-stamp). Sekarang home.html JUGA
+   pakai app-shell (sidebar + topbar-mini) kayak halaman lain — bukan
+   navbar publik sendiri lagi — jadi section-section di bawah ini
+   (hero/fitur/cara-kerja/cta) tinggal ditaruh langsung di dalam
+   <main class="landing-main"> punya main-col, bukan di dalam .wrap
+   (soalnya .wrap max-width-nya lebih sempit dari layout landing ini).
+   =================================================================== */
+.landing-body{background:var(--paper);}
+.landing-main{flex:1;}
+
+.landing-hero{
+  max-width:1180px;margin:0 auto;padding:64px 40px 40px;
+  display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;
+}
+.landing-h1{font-family:var(--mono);font-size:42px;line-height:1.18;margin:0 0 18px;letter-spacing:-.01em;}
+.landing-h1 .hl{color:var(--stamp);}
+.landing-hero-sub{font-size:15px;max-width:480px;margin-bottom:26px;}
+.landing-hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px;}
+.landing-trust-row{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-soft);}
+.eyebrow .dot-live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#3B7A57;margin-right:4px;animation:landingPulseDot 1.6s ease infinite;}
+
+.landing-hero-visual{
+  position:relative;
+  /* Padding atas & bawah ini SENGAJA nyisain "ruang kosong" khusus
+     buat 2 chip info yang ngambang (lihat .landing-mock-chip di bawah)
+     — sebelumnya chip-nya numpuk pas di atas kartu preview & suka
+     nutupin teks harga/status pas lebar layarnya lebih sempit dari
+     desain awal. Sekarang posisinya dipindah ke strip atas/bawah ini
+     (di LUAR kotak kartunya), jadi kartu previewnya selalu kebaca
+     penuh berapa pun lebar browser-nya. */
+  padding:34px 0 40px;
+}
+.landing-mock-ticket{margin-bottom:0;max-width:320px;}
+.landing-pulse{animation:landingPulseDot 1.6s ease infinite;}
+.landing-mock-chip{
+  position:absolute;background:var(--white);border:1px solid var(--line);
+  border-radius:20px;padding:8px 14px;font-size:12.5px;font-weight:600;
+  box-shadow:0 6px 18px rgba(27,42,74,.1);animation:landingFloat 3.2s ease-in-out infinite;
+  max-width:calc(100% - 6px);
+  white-space:nowrap;
+}
+/* chip-a nangkring di strip padding ATAS (di luar kartu, bukan
+   nimpa/overlap kartu lagi), chip-b di strip padding BAWAH. */
+.landing-chip-a{top:0;right:6px;animation-delay:0s;}
+.landing-chip-b{bottom:0;right:-6px;animation-delay:.6s;}
+
+.landing-section{max-width:1180px;margin:0 auto;padding:60px 40px;}
+.landing-section-alt{background:var(--paper-2);border-radius:24px;max-width:1180px;}
+.landing-h2{font-family:var(--mono);font-size:28px;text-align:center;margin:0 0 14px;letter-spacing:-.01em;}
+.landing-section-sub{text-align:center;max-width:560px;margin:0 auto 40px;}
+
+.landing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.landing-feature-card, .landing-step-card{
+  margin-bottom:0;opacity:0;transform:translateY(14px);
+  transition:opacity .5s ease, transform .5s ease;
+}
+.landing-feature-card.in-view, .landing-step-card.in-view{opacity:1;transform:translateY(0);}
+.landing-feature-card h3, .landing-step-card h3{font-family:var(--sans);font-size:16px;margin:14px 0 6px;}
+.landing-feature-card p, .landing-step-card p{font-size:13.5px;color:var(--ink-soft);margin:0;line-height:1.5;}
+.landing-feature-num{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:50%;border:none;transform:none;
+  background:var(--ink);color:var(--white);font-size:13px;letter-spacing:0;
+}
+
+.landing-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:0 40px;}
+
+.landing-cta-banner{
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  flex-wrap:wrap;background:var(--ink);color:var(--white);border-color:var(--ink);
+}
+.landing-cta-banner .eyebrow{color:var(--gold);}
+.landing-cta-banner .sub{color:var(--paper-2);}
+.landing-cta-banner::before, .landing-cta-banner::after{background:var(--paper);}
+
+.landing-footer{
+  max-width:1180px;margin:0 auto;padding:40px 40px 60px;text-align:center;
+  border-top:1px solid var(--line);
+}
+.landing-footer .brand{display:inline-flex;text-decoration:none;justify-content:center;}
+.landing-footer-links{display:flex;gap:20px;justify-content:center;margin-top:18px;font-size:13px;color:var(--ink-soft);}
+.landing-footer-links a{text-decoration:none;}
+.landing-footer-links a:hover{color:var(--ink);}
+
+@keyframes landingPulseDot{0%,100%{opacity:1;}50%{opacity:.35;}}
+@keyframes landingFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+@media (max-width:900px){
+  .landing-hero{grid-template-columns:1fr;padding:40px 24px;}
+  .landing-hero-visual{order:-1;max-width:340px;margin:0 auto;}
+  .landing-grid{grid-template-columns:repeat(2,1fr);}
+  .landing-steps{grid-template-columns:repeat(2,1fr);padding:0;}
+  .landing-section{padding:48px 20px;}
+}
+@media (max-width:560px){
+  .landing-h1{font-size:32px;}
+  .landing-grid{grid-template-columns:1fr;}
+  .landing-steps{grid-template-columns:1fr;}
+  .landing-cta-banner{flex-direction:column;align-items:flex-start;text-align:left;}
+}
+
+
+
+
+/* ---- ikon bulat berwarna (toast & panel notifikasi) ----
+   Isinya ikon PNG (lihat iconChip di app.js). Tiap ikon punya animasi
+   sendiri lewat class .ni-<nama-ikon>: .ni-check, .ni-reject, .ni-info,
+   .ni-warning, .ni-accept, .ni-print-start, .ni-print-done, .ni-redirect,
+   .ni-bell, .ni-lock, .ni-stack. */
+.icon-chip{
+  --chip:var(--ink);
+  width:32px;height:32px;border-radius:50%;flex:none;position:relative;
+  display:flex;align-items:center;justify-content:center;
+  animation:niChipIn .32s cubic-bezier(.2,.8,.3,1) both;
+}
+.icon-chip{color:#fff;}
+.icon-chip .icon-img{width:16px;height:16px;position:relative;}
+.chip-green{background:#2E8B57;--chip:#2E8B57;}
+.chip-gold{background:var(--gold);--chip:var(--gold);}
+.chip-red{background:var(--stamp);--chip:var(--stamp);}
+.chip-navy{background:var(--ink);--chip:var(--ink);}
+@keyframes niChipIn{from{transform:scale(.4);opacity:0;}to{transform:none;opacity:1;}}
+@keyframes niRing{from{transform:scale(1);opacity:.65;}to{transform:scale(1.95);opacity:0;}}
+@keyframes niShake{
+  0%,100%{transform:translateX(0);}20%{transform:translateX(-4px);}40%{transform:translateX(4px);}
+  60%{transform:translateX(-3px);}80%{transform:translateX(2px);}
+}
+@keyframes niBlink{0%,100%{opacity:1;}50%{opacity:.35;}}
+/* cincin yang memancar keluar */
+.ni-check::after,.ni-info::after,.ni-bell::after,.ni-print-done::after{
+  content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--chip);pointer-events:none;
+}
+.ni-check::after{animation:niRing .8s ease-out .2s both;}
+.ni-info::after{animation:niRing 1.3s ease-out .3s 2 both;}
+.ni-bell::after{animation:niRing 1.4s ease-out .2s 3 both;}
+.ni-print-done::after{animation:niRing .9s ease-out .35s both;}
+
+/* Check (berhasil) — mengecil lalu "pop" berputar + cincin */
+.ni-check .icon-img{animation:niPop .6s cubic-bezier(.2,.9,.3,1.3) .12s both;}
+@keyframes niPop{
+  0%{transform:scale(.2) rotate(-40deg);opacity:0;}
+  60%{transform:scale(1.35) rotate(8deg);opacity:1;}
+  100%{transform:none;opacity:1;}
+}
+/* Reject (gagal / ditolak) — chip bergetar, ikon "dicap" masuk */
+.ni-reject{animation:niChipIn .3s cubic-bezier(.2,.8,.3,1) both,niShake .5s ease .35s both;}
+.ni-reject .icon-img{animation:niStamp .4s cubic-bezier(.2,.8,.3,1) .1s both;}
+@keyframes niStamp{from{transform:scale(2.2) rotate(-25deg);opacity:0;}to{transform:none;opacity:1;}}
+/* Warning — goyang dari bawah */
+.ni-warning .icon-img{transform-origin:50% 85%;animation:niWobble 1s ease-in-out .2s 2;}
+@keyframes niWobble{
+  0%,100%{transform:rotate(0);}20%{transform:rotate(-14deg);}45%{transform:rotate(12deg);}
+  65%{transform:rotate(-7deg);}85%{transform:rotate(3deg);}
+}
+/* Info — melayang pelan + cincin */
+.ni-info .icon-img{animation:niBob 1.4s ease-in-out .25s 2;}
+@keyframes niBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-2.5px);}}
+/* Accept (pesanan diterima) — turun dari atas lalu memantul */
+.ni-accept .icon-img{animation:niDropIn .6s cubic-bezier(.3,.9,.4,1.2) .1s both;}
+@keyframes niDropIn{
+  0%{transform:translateY(-9px) scale(.6);opacity:0;}
+  60%{transform:translateY(2px) scale(1.1);opacity:1;}
+  100%{transform:none;opacity:1;}
+}
+/* Print-Start (sedang diprint) — bergetar halus & berdenyut terus */
+.ni-print-start .icon-img{animation:niPrinting .9s ease-in-out .1s infinite;}
+@keyframes niPrinting{
+  0%,100%{transform:translateY(0) scale(1);}25%{transform:translateY(-1.5px) scale(1.06);}
+  50%{transform:translateY(0) scale(1);}75%{transform:translateY(1px) scale(.96);}
+}
+/* Print-Done (selesai) — melompat + kilau di pojok */
+.ni-print-done .icon-img{animation:niHop .8s cubic-bezier(.3,.8,.4,1) .1s both;}
+@keyframes niHop{
+  0%{transform:translateY(4px) scale(.7);opacity:0;}45%{transform:translateY(-5px) scale(1.15);opacity:1;}
+  70%{transform:translateY(0);}85%{transform:translateY(-2px);}100%{transform:none;}
+}
+.ni-print-done::before{
+  content:"";position:absolute;top:-3px;right:-3px;width:7px;height:7px;background:var(--gold);
+  clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);
+  opacity:0;pointer-events:none;animation:niSpark .8s ease .45s both;
+}
+@keyframes niSpark{0%{transform:scale(0) rotate(0);opacity:0;}50%{transform:scale(1.6) rotate(90deg);opacity:1;}100%{transform:scale(0) rotate(180deg);opacity:0;}}
+/* Redirect (dialihkan) — meluncur dari kiri */
+.ni-redirect .icon-img{animation:niShuffle 1s ease-in-out .15s 2 both;}
+@keyframes niShuffle{
+  0%{transform:translateX(-6px) rotate(-10deg);opacity:0;}50%{transform:translateX(2px) rotate(5deg);opacity:1;}
+  100%{transform:none;opacity:1;}
+}
+/* Bell (pesanan masuk untuk operator) — lonceng berayun + cincin */
+.ni-bell .icon-img{transform-origin:50% 10%;animation:bellRing .8s ease .15s 3;}
+/* Lock (perlu masuk) — digoyang seperti mencoba dibuka */
+.ni-lock .icon-img{transform-origin:50% 100%;animation:niLockTry 1s ease-in-out .2s 2;}
+@keyframes niLockTry{
+  0%,100%{transform:rotate(0);}20%{transform:rotate(-10deg);}40%{transform:rotate(9deg);}
+  60%{transform:rotate(-5deg);}80%{transform:rotate(3deg);}
+}
+/* Stack (banyak kabar sekaligus) — jatuh menumpuk */
+.ni-stack .icon-img{animation:niStackIn .55s cubic-bezier(.2,.8,.3,1.2) .12s both;}
+@keyframes niStackIn{
+  from{transform:translateY(-8px) scaleY(.5);opacity:0;}
+  to{transform:none;opacity:1;}
+}
+/* di panel riwayat animasi cukup sekali (jangan berulang terus) */
+.notif-item .icon-chip,.notif-item .icon-chip *,
+.notif-item .icon-chip::before,.notif-item .icon-chip::after{animation-iteration-count:1 !important;}
+
+/* ---- pusat notifikasi (lonceng di topbar) ---- */
+.topbar-right{display:flex;align-items:center;gap:6px;}
+.notif-wrap{position:relative;}
+.notif-bell-btn{
+  position:relative;width:38px;height:38px;border:none;border-radius:50%;
+  background:transparent;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:background .15s ease;
+}
+.notif-bell-btn:hover{background:var(--paper);}
+.notif-bell-btn .icon-img{width:22px;height:22px;}
+.notif-bell-btn.is-ringing .icon-img{animation:bellRing .7s ease;transform-origin:50% 10%;}
+@keyframes bellRing{
+  0%{transform:rotate(0);}15%{transform:rotate(16deg);}30%{transform:rotate(-14deg);}
+  45%{transform:rotate(10deg);}60%{transform:rotate(-8deg);}75%{transform:rotate(4deg);}100%{transform:rotate(0);}
+}
+.notif-badge{
+  position:absolute;top:-2px;right:-3px;min-width:12px;height:12px;padding:0 3px;
+  border-radius:7px;background:var(--stamp);color:var(--white);
+  font-family:var(--mono);font-size:8.5px;font-weight:700;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px solid var(--white);box-sizing:content-box;
+  animation:badgePop .25s cubic-bezier(.2,.8,.3,1);
+}
+.notif-badge.hidden{display:none;}
+@keyframes badgePop{from{transform:scale(.4);opacity:0;}to{transform:scale(1);opacity:1;}}
+.notif-panel{
+  position:absolute;top:calc(100% + 8px);right:0;width:380px;max-width:calc(100vw - 24px);
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:0 16px 40px rgba(27,42,74,.22);z-index:105;overflow:hidden;
+  animation:notifPanelIn .18s cubic-bezier(.2,.8,.3,1);transform-origin:top right;
+}
+.notif-panel.is-leaving{animation:notifPanelOut .14s ease forwards;}
+.notif-panel.hidden{display:none;}
+@keyframes notifPanelIn{from{opacity:0;transform:translateY(-6px) scale(.97);}to{opacity:1;transform:none;}}
+@keyframes notifPanelOut{from{opacity:1;}to{opacity:0;transform:translateY(-6px) scale(.97);}}
+.notif-panel-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;border-bottom:1px solid var(--line);font-size:14px;
+}
+.notif-link-btn{
+  border:none;background:transparent;color:var(--stamp);font-size:12px;font-weight:600;
+  cursor:pointer;padding:2px 4px;border-radius:6px;font-family:var(--sans);
+}
+.notif-link-btn:hover{background:var(--paper);}
+.notif-list{max-height:340px;overflow-y:auto;}
+.notif-item{
+  display:flex;gap:12px;padding:12px 16px;text-decoration:none;color:var(--ink);
+  border-bottom:1px solid var(--paper-2);transition:background .12s ease;
+}
+.notif-item:hover{background:var(--paper);}
+.notif-item.is-unread{background:rgba(212,162,76,.12);}
+.notif-item.is-unread:hover{background:rgba(212,162,76,.2);}
+.notif-item-body{flex:1;min-width:0;}
+.notif-item-title{font-family:var(--mono);font-weight:700;font-size:13px;margin-bottom:2px;}
+.notif-item-text{font-size:12.5px;color:var(--ink-soft);line-height:1.45;}
+.notif-item-time{font-size:11px;color:var(--ink-soft);margin-top:4px;opacity:.8;}
+.notif-empty{padding:28px 20px;text-align:center;color:var(--ink-soft);font-size:13px;line-height:1.5;}
+.notif-empty p{margin:8px 0 0;}
+.notif-empty-icon{width:28px;height:28px;opacity:.5;color:var(--ink-soft);}
+@media (max-width:600px){
+  .notif-panel{position:fixed;top:60px;right:12px;left:12px;width:auto;max-width:none;}
+}
+
+
+/* ---- animasi baris pesanan & status (lihat animateJobRows di app.js) ---- */
+.job-row.is-new,.job-card.is-new{animation:rowSlideIn .45s cubic-bezier(.2,.8,.3,1);}
+@keyframes rowSlideIn{
+  from{opacity:0;transform:translateY(-10px);box-shadow:0 0 0 3px rgba(212,162,76,.45);}
+  to{opacity:1;transform:none;box-shadow:0 0 0 0 rgba(212,162,76,0);}
+}
+.stamp-badge.is-changed{animation:stampSlam .5s cubic-bezier(.2,.8,.3,1);}
+@keyframes stampSlam{
+  0%{transform:rotate(-2deg) scale(1.7);opacity:0;}
+  60%{transform:rotate(-2deg) scale(.92);opacity:1;}
+  100%{transform:rotate(-2deg) scale(1);}
+}
+.stamp-printing::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none;
+  animation:printingPulse 1.2s ease-in-out infinite;
+}
+@keyframes printingPulse{0%,100%{opacity:.35;transform:scale(.8);}50%{opacity:1;transform:scale(1.2);}}
+
+/* ---- skeleton loading (pengganti teks "Memuat…") ---- */
+.skeleton-list{display:flex;flex-direction:column;gap:14px;}
+.skeleton-row{
+  display:flex;justify-content:space-between;align-items:center;gap:14px;
+  padding:16px 18px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+}
+.skeleton-col{flex:1;display:flex;flex-direction:column;gap:9px;}
+.skeleton{
+  display:block;border-radius:6px;
+  background:linear-gradient(90deg,var(--paper-2) 25%,var(--paper) 50%,var(--paper-2) 75%);
+  background-size:200% 100%;animation:skeletonShimmer 1.3s ease-in-out infinite;
+}
+.sk-title{height:14px;width:55%;}
+.sk-line{height:11px;width:35%;}
+.sk-pill{height:24px;width:84px;border-radius:20px;flex:none;}
+@keyframes skeletonShimmer{from{background-position:200% 0;}to{background-position:-200% 0;}}
+
+/* ---- empty state yang lebih ramah ---- */
+.empty-state{animation:pageFadeIn .3s ease;}
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;padding:32px 20px;line-height:1.5;
+}
+.empty-state-icon,.icon-img.empty-state-icon{
+  width:56px;height:56px;opacity:.55;display:block;margin:0;flex:none;color:var(--ink-soft);
+  background-color:currentColor;
+  -webkit-mask:var(--icon) center/contain no-repeat;
+          mask:var(--icon) center/contain no-repeat;
+}
+
+/* ---- hormati preferensi "kurangi gerakan" dari sistem/browser ---- */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* ---- Dropzone "slot printer" (Upload) ---- */
+/* Pilih tipe file: tombol label + tombol panah dipisah (dua kotak dengan
+   celah), tapi klik yang mana pun membuka menu yang sama. Tidak ada animasi
+   "menekan" di seluruh baris — yang bergerak cuma panahnya (berputar saat
+   menu terbuka). */
+.type-split{display:flex;gap:8px;width:100%;align-items:stretch;}
+.type-split .btn{transform:none;}
+.type-split .btn:active{transform:none;}
+.type-main{flex:1;min-width:0;justify-content:flex-start;text-align:left;}
+.type-main span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.type-arrow{flex:0 0 52px;justify-content:center;padding-left:0;padding-right:0;}
+.type-arrow .caret{display:inline-block;font-size:15px;line-height:1;transition:transform .22s cubic-bezier(.2,.8,.3,1);}
+.type-split .btn:hover{background:var(--paper);}
+.type-split .btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px;}
+.upload-control:has(.filetype-menu.open) .type-split .btn{border-color:var(--ink);}
+.upload-control:has(.filetype-menu.open) .type-arrow .caret{transform:rotate(180deg);}
+.type-arrow:active .caret{transform:translateY(1px);}
+.upload-control:has(.filetype-menu.open) .type-arrow:active .caret{transform:rotate(180deg) translateY(-1px);}
+@media (prefers-reduced-motion:reduce){.type-arrow .caret{transition:none;}}
+.upload-control .filetype-menu{left:0;right:auto;transform-origin:top left;}
+.dropzone{margin-top:12px;border:2px dashed var(--line);border-radius:var(--radius);background:var(--paper);padding:26px 20px 22px;text-align:center;cursor:pointer;outline:none;transition:border-color .15s,background .15s,transform .15s;}
+.dropzone *{pointer-events:none;}
+.dropzone:hover,.dropzone:focus-visible{border-color:var(--ink-soft);}
+.dropzone.dz-over{border-color:var(--stamp);background:#FBEFEE;transform:scale(1.01);}
+.dz-printer{position:relative;width:120px;height:74px;margin:0 auto 14px;overflow:hidden;}
+.dz-slot{position:absolute;top:0;left:0;right:0;height:14px;background:var(--ink);border-radius:8px;box-shadow:0 3px 0 rgba(27,42,74,.18);z-index:2;}
+.dz-slot::after{content:"";position:absolute;left:12px;right:12px;top:5px;height:4px;background:#0c1528;border-radius:3px;}
+.dz-paper{position:absolute;top:10px;left:18px;right:18px;height:64px;background:var(--white);border:1px solid var(--line);border-radius:3px 3px 0 0;padding:14px 8px 0;z-index:1;transition:transform .35s cubic-bezier(.2,.8,.3,1);}
+.dz-paper i{display:block;height:4px;border-radius:2px;background:var(--paper-2);margin-bottom:7px;}
+.dz-paper i:nth-child(2){width:70%;}
+.dz-paper i:nth-child(3){width:45%;background:var(--gold);}
+.dropzone:hover .dz-paper{transform:translateY(-8px);}
+.dropzone.dz-over .dz-paper{animation:dzFeed .9s ease-in-out infinite;}
+@keyframes dzFeed{0%,100%{transform:translateY(6px);}50%{transform:translateY(-34px);}}
+.dz-title{font-family:var(--mono);font-weight:600;font-size:15px;}
+.dz-hint{font-size:13px;color:var(--ink-soft);margin-top:4px;}
+.dz-hint b{color:var(--stamp);}
+.staged-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;margin-top:8px;background:var(--white);animation:modalBoxPopIn .2s ease;}
+.staged-name{font-size:14px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.staged-meta{font-family:var(--mono);font-size:11px;color:var(--ink-soft);}
+.staged-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+@media (prefers-reduced-motion:reduce){.dropzone.dz-over .dz-paper{animation:none;transform:translateY(-20px);}}
+
+/* Modal "Kelola pilihan ukuran kertas": daftar bisa discroll kalau panjang */
+#paperSizeModal .modal-box{display:flex;flex-direction:column;max-height:85vh;overflow:hidden;}
+#paperSizeModal .modal-box > *{flex-shrink:0;}
+#paperSizeModal #paperSizeManageList{flex:1 1 auto;min-height:0;max-height:min(45vh,300px);overflow-y:auto;padding-right:4px;overscroll-behavior:contain;}
+
+
+/* ---- peta preview lokasi di Profil ----
+   Leaflet memberi pane/kontrolnya z-index 400-1000 tanpa stacking context,
+   jadi di HP peta "tembus" ke atas sidebar drawer, panel notifikasi, dan
+   bubble developer. isolation:isolate + z-index:0 mengurung semua z-index
+   Leaflet di dalam peta itu sendiri, jadi elemen lain (z-index 20+) selalu
+   di atasnya. Peta juga ditutup otomatis setelah lokasi cocok. */
+.location-map-wrap{margin-bottom:14px;}
+.location-map-toggle{margin-bottom:10px;}
+.location-map{
+  position:relative;z-index:0;isolation:isolate;
+  width:100%;height:220px;
+  border-radius:10px;border:1px solid var(--line);
+  overflow:hidden;
+}
+.leaflet-container{position:relative;z-index:0;isolation:isolate;}
+
+/* ---- kartu "Buka Dashboard Printing" di upload.html (operator & developer) ---- */
+.dash-cta{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  background:linear-gradient(135deg,var(--ink) 0%,#2B4173 100%);
+  border-color:var(--ink);color:#fff;overflow:hidden;
+  box-shadow:0 10px 26px rgba(27,42,74,.22);
+}
+.dash-cta::before,.dash-cta::after{border-color:var(--ink);}
+.dash-cta-icon{
+  width:56px;height:56px;border-radius:14px;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:var(--gold);
+}
+.dash-cta-icon .icon-img{width:28px;height:28px;}
+.dash-cta-body{flex:1 1 220px;min-width:0;}
+.dash-cta-role{
+  display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink);background:var(--gold);border-radius:999px;padding:3px 10px;margin-bottom:8px;
+}
+.dash-cta h2{color:#fff;margin:0 0 4px;font-size:20px;}
+.dash-cta p{margin:0;color:rgba(255,255,255,.78);font-size:13.5px;line-height:1.5;}
+.dash-cta-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;flex:none;
+  background:#fff;color:var(--ink);font-weight:700;font-size:14px;text-decoration:none;
+  padding:12px 18px;border-radius:10px;transition:transform .15s ease,box-shadow .15s ease;
+}
+.dash-cta-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,.25);}
+.dash-cta-arrow{transition:transform .15s ease;}
+.dash-cta-btn:hover .dash-cta-arrow{transform:translateX(4px);}
+@media (max-width:640px){
+  .dash-cta{padding:18px 16px;gap:14px;}
+  .dash-cta-btn{width:100%;}
+}
+
+/* ---- logo web (Resources/Images/Web-Logo.png) di sebelah kiri tulisan D'PRINTING ---- */
+.brand .brand-logo{width:28px;height:28px;border-radius:7px;object-fit:contain;flex:none;display:block;}
+.sidebar .brand{display:flex;align-items:center;gap:10px;}
+@media (max-width:760px){.sidebar .brand{display:flex;}}
+
+/* ---- tab kategori di panel notifikasi (Semua / Pesanan / Pesan / Komunitas / Developer / Masalah) ---- */
+.notif-tabs{
+  display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;
+  border-bottom:1px solid var(--line);background:var(--white);
+}
+.notif-tab{
+  flex:none;display:inline-flex;align-items:center;gap:5px;
+  border:1px solid var(--line);background:var(--white);color:var(--ink-soft);
+  font-family:var(--sans);font-size:12px;font-weight:600;line-height:1;
+  padding:6px 10px;border-radius:999px;cursor:pointer;
+  transition:background .12s ease,color .12s ease,border-color .12s ease;
+}
+.notif-tab:hover{background:var(--paper);color:var(--ink);}
+.notif-tab.is-active{background:var(--ink);border-color:var(--ink);color:var(--white);}
+.notif-tab-toggle{border-style:dashed;}
+.notif-tab-toggle.is-active{background:var(--gold);border-color:var(--gold);color:var(--ink);border-style:solid;}
+.notif-tab-count{
+  min-width:16px;height:16px;padding:0 4px;border-radius:8px;
+  background:var(--stamp);color:#fff;font-size:10px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.notif-tab.is-active .notif-tab-count{background:var(--gold);color:var(--ink);}
+.notif-item[tabindex]{cursor:default;}
+.notif-cat-tag{
+  display:inline-block;font-size:10px;font-weight:700;letter-spacing:.02em;
+  padding:1px 6px;border-radius:999px;margin-right:4px;
+  background:var(--paper-2);color:var(--ink-soft);
+}
+.notif-cat-masalah{background:rgba(193,68,60,.14);color:var(--stamp);}
+.notif-cat-developer,
+.notif-cat-sistem{background:rgba(212,162,76,.22);color:#8a6420;}
+.notif-cat-bantuan{background:rgba(31,58,95,.14);color:var(--ink);}
+.notif-cat-komunitas{background:rgba(46,139,87,.14);color:#2E8B57;}
+
+/* ---- toolbar Kelola User: kolom cari ---- */
+.user-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.user-tools input[type=text]{flex:1;min-width:200px;margin:0;}
+
+
+/* ---- halaman Kirim Notifikasi (notify.html, developer) ---- */
+.notify-card{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px 24px 20px;
+}
+.notify-step-title{
+  font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-soft);margin:0 0 12px;
+}
+.notify-step-title:not(:first-child){margin-top:26px;padding-top:20px;border-top:1px dashed var(--line);}
+.notify-mode{margin-bottom:14px;}
+.notify-card select{width:100%;}
+.notify-mode button{width:auto;height:36px;padding:0 18px;font:600 13px var(--sans);}
+#notifyUsersPane input[type=text]{margin:0;}
+.notify-picked{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0;min-height:28px;align-items:center;}
+.notify-picked-empty{font-size:13px;color:var(--ink-soft);}
+.notify-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--ink);color:var(--white);font-size:12px;font-weight:600;
+  padding:3px 4px 3px 10px;border-radius:999px;
+}
+.notify-chip button{
+  border:0;background:transparent;color:inherit;cursor:pointer;
+  width:18px;height:18px;border-radius:50%;font-size:15px;line-height:1;padding:0;
+}
+.notify-chip button:hover{background:rgba(255,255,255,.22);}
+.notify-user-list{
+  margin-top:10px;max-height:300px;overflow:auto;
+  border:1px solid var(--line);border-radius:8px;
+}
+.notify-user-row{
+  display:flex;align-items:center;gap:12px;margin:0;padding:9px 12px;
+  font-weight:400;cursor:pointer;border-bottom:1px solid var(--line);
+}
+.notify-user-row:last-child{border-bottom:0;}
+.notify-user-row:hover{background:var(--paper);}
+.notify-user-row.is-checked{background:rgba(212,162,76,.14);}
+.notify-user-row input[type=checkbox]{width:17px;height:17px;margin:0;flex:0 0 auto;accent-color:var(--ink);}
+.notify-user-info{display:flex;flex-direction:column;min-width:0;}
+.notify-user-name{font-weight:600;font-size:14px;color:var(--ink);}
+.notify-user-email{font-size:12px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.notify-list-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;}
+.notify-count{float:right;font-weight:400;color:var(--ink-soft);font-size:12px;}
+.notify-actions{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  margin-top:18px;
+}
+.notify-summary{font-size:13px;color:var(--ink-soft);}
+@media (max-width:600px){
+  .notify-card{padding:18px 16px;}
+  .notify-actions{flex-direction:column-reverse;align-items:stretch;}
+}
+
+
+/* ---- Kotak Masuk (inbox.html) — arsip notifikasi bergaya email ---- */
+.side-mail-badge{margin-left:auto;}
+.side-link.active .side-mail-badge{background:var(--white);color:var(--stamp);}
+
+/* Tombol "Buka Kotak Masuk" di panel lonceng (di atas toggle Suara/Browser) */
+.notif-open-inbox{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:11px 16px;border-top:1px solid var(--line);background:var(--white);
+  font-size:13px;font-weight:600;color:var(--ink);text-decoration:none;
+}
+.notif-open-inbox:hover{background:var(--paper);}
+
+.mail-layout{
+  display:grid;grid-template-columns:212px minmax(0,1.15fr) minmax(0,1fr);
+  gap:16px;align-items:start;
+}
+.mail-labels,.mail-list-col,.mail-read{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+}
+
+/* kolom label */
+.mail-labels{padding:8px;display:flex;flex-direction:column;gap:2px;}
+.mail-label{
+  display:flex;align-items:center;gap:10px;width:100%;
+  padding:9px 10px;border:0;border-radius:8px;background:none;cursor:pointer;
+  font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink-soft);text-align:left;
+}
+.mail-label:hover{background:var(--paper);color:var(--ink);}
+.mail-label.is-active{background:var(--ink);color:var(--white);font-weight:600;}
+.mail-label-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mail-label-count{
+  min-width:20px;height:18px;padding:0 6px;border-radius:9px;
+  background:var(--stamp);color:#fff;font-family:var(--mono);font-size:11px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;
+}
+.mail-label-count.is-total{background:var(--paper-2);color:var(--ink-soft);}
+.mail-label.is-active .mail-label-count{background:var(--gold);color:var(--ink);}
+.mail-label-sep{height:1px;background:var(--line);margin:6px 4px;}
+
+/* kolom daftar */
+.mail-list-col{overflow:hidden;}
+.mail-search-row{display:flex;gap:8px;padding:12px;border-bottom:1px solid var(--line);}
+.mail-search-row input[type=text]{margin:0;flex:1;min-width:0;}
+#mailSortWrap{flex:none;}
+.mail-sort{width:164px;}
+.mail-sort .custom-select-btn{padding:11px 12px;font-size:14px;}
+.mail-sort .custom-select-menu{left:auto;right:0;min-width:100%;width:max-content;}
+.mail-toolbar{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:8px 12px;border-bottom:1px solid var(--line);background:var(--paper);
+}
+.mail-check-all{display:flex;align-items:center;gap:8px;margin:0;font-size:12.5px;font-weight:600;color:var(--ink-soft);cursor:pointer;}
+.mail-check-all input,.mail-check{width:17px;height:17px;margin:0;flex:none;accent-color:var(--ink);cursor:pointer;}
+.mail-toolbar-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.mail-empty-trash{margin-left:auto;}
+.mail-list{max-height:calc(100vh - 340px);min-height:300px;overflow-y:auto;}
+
+.mail-row{
+  display:flex;align-items:flex-start;gap:8px;padding:11px 12px;
+  border-bottom:1px solid var(--paper-2);transition:background .12s ease;
+}
+.mail-row:hover{background:var(--paper);}
+.mail-row.is-unread{background:rgba(212,162,76,.12);}
+.mail-row.is-unread:hover{background:rgba(212,162,76,.2);}
+.mail-row.is-checked{background:rgba(27,42,74,.08);}
+.mail-row.is-open{box-shadow:inset 3px 0 0 var(--stamp);}
+.mail-row .mail-check{margin-top:2px;}
+.mail-star{
+  flex:none;border:0;background:none;padding:2px;border-radius:6px;cursor:pointer;
+  color:var(--line);display:inline-flex;
+}
+.mail-star:hover{color:var(--gold);}
+.mail-star.is-on{color:var(--gold);}
+.mail-row-main{flex:1;min-width:0;cursor:pointer;outline-offset:2px;}
+.mail-row-top{display:flex;align-items:center;gap:6px;min-width:0;}
+.mail-row-title{
+  flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:13.5px;color:var(--ink);
+}
+.mail-row.is-unread .mail-row-title{font-weight:700;}
+.mail-row-time{flex:none;font-size:11px;color:var(--ink-soft);}
+.mail-row-snippet{
+  margin-top:2px;font-size:12.5px;color:var(--ink-soft);line-height:1.4;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* kolom baca */
+.mail-read{padding:22px 24px;min-height:300px;position:sticky;top:16px;}
+.mail-read-empty{text-align:center;color:var(--ink-soft);font-size:13px;padding:60px 10px;}
+.mail-read-empty p{margin:8px 0 0;}
+.mail-back{
+  display:none;border:0;background:none;padding:0 0 12px;cursor:pointer;
+  font-family:var(--sans);font-size:13px;font-weight:600;color:var(--ink-soft);
+}
+.mail-read-head{display:flex;gap:12px;align-items:flex-start;padding-bottom:14px;border-bottom:1px dashed var(--line);}
+.mail-read-headtext{min-width:0;}
+.mail-read-head h2{margin:0 0 6px;font-size:18px;line-height:1.3;word-break:break-word;}
+.mail-read-meta{font-size:12px;color:var(--ink-soft);}
+.mail-read-body{padding:16px 0;font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word;}
+.mail-read-actions{display:flex;gap:8px;flex-wrap:wrap;padding-top:14px;border-top:1px solid var(--paper-2);}
+/* Pesan Kontak CS (khusus developer): info pengirim + kotak balasan */
+.mail-ticket-meta{font-size:13px;color:var(--ink-soft);padding:6px 0 0;}
+.mail-ticket-done{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(46,139,87,.14);color:#2E8B57;}
+.mail-reply{padding:4px 0 16px;}
+.mail-reply label{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:600;margin-bottom:6px;}
+.mail-reply textarea{width:100%;margin-bottom:6px;}
+.mail-reply-last{font-size:12px;color:var(--ink-soft);background:var(--paper-2);border-radius:8px;padding:6px 10px;margin-bottom:8px;white-space:pre-wrap;word-break:break-word;}
+
+@media (max-width:1000px){
+  .mail-layout{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);}
+  .mail-labels{
+    grid-column:1 / -1;flex-direction:row;overflow-x:auto;gap:6px;padding:8px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .mail-label{width:auto;flex:none;white-space:nowrap;}
+  .mail-label-sep{width:1px;height:auto;margin:4px 2px;flex:none;}
+}
+@media (max-width:760px){
+  /* HP: daftar dan isi bergantian (kayak halaman Pesan) */
+  .mail-layout{grid-template-columns:minmax(0,1fr);}
+  .mail-read{display:none;position:static;padding:18px 16px;}
+  .mail-layout.show-read .mail-list-col{display:none;}
+  .mail-layout.show-read .mail-read{display:block;}
+  .mail-back{display:block;}
+  .mail-list{max-height:none;}
+  .mail-search-row select{max-width:120px;}
+  /* tombol toolbar tetap ringkas walau aturan HP membesarkan .btn (min 44px) */
+  .mail-toolbar .btn{min-height:36px;padding:6px 12px;}
+}
+
+
+/* ===================================================================
+   Bagian Lokasi di Edit profil — dirapikan biar tidak terlihat penuh:
+   dropdown wilayah 2 kolom, peta jadi kartu kecil dengan bar tipis,
+   & "Detail alamat" jadi baris kecil yang bisa dibuka.
+   =================================================================== */
+.loc-section{
+  margin-top:20px;padding:16px;
+  border:1px solid var(--line);border-radius:12px;background:var(--paper);
+}
+.loc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.loc-head-text{min-width:0;}
+.loc-title{font-size:14px;font-weight:700;color:var(--ink);}
+.loc-sub{margin:2px 0 0;font-size:12.5px;color:var(--ink-soft);line-height:1.4;}
+.loc-detect-btn{flex-shrink:0;white-space:nowrap;}
+.loc-section .error-msg:empty{display:none;}
+.loc-section .error-msg{margin-top:10px;}
+
+.loc-map-card{
+  margin-top:12px;border:1px solid var(--line);border-radius:10px;
+  background:var(--white);overflow:hidden;
+}
+.loc-map-card.hidden{display:none;}
+.loc-map-bar{
+  display:flex;align-items:center;gap:10px;width:100%;
+  padding:9px 12px;border:0;background:transparent;
+  font:inherit;text-align:left;cursor:pointer;color:var(--ink);
+}
+.loc-map-bar:hover{background:var(--paper);}
+.loc-map-bar-title{font-size:13px;font-weight:600;}
+.loc-map-bar-hint{font-size:12px;color:var(--ink-soft);margin-left:auto;}
+.loc-map-bar-arrow{font-size:12px;color:var(--ink-soft);transition:transform .2s ease;}
+.loc-map-bar-arrow.open{transform:rotate(180deg);}
+.loc-map-card .location-map{
+  height:170px;border:0;border-top:1px solid var(--line);border-radius:0;
+}
+
+.loc-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;margin-top:6px;
+}
+.loc-field{min-width:0;}
+.loc-field label{margin:10px 0 4px;font-size:12.5px;}
+.loc-field select,.loc-field input[type=text]{width:100%;}
+.loc-field select{padding:10px 10px;font-size:14px;}
+.loc-field input.hidden{display:none;}
+.loc-field input[type=text]:not(.hidden){margin-top:6px;}
+.loc-span-2{grid-column:1 / -1;}
+.loc-note{margin:10px 0 0;font-size:12px;color:var(--ink-soft);line-height:1.4;}
+
+.loc-detail-toggle{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  width:100%;margin-top:12px;padding:8px 12px;
+  border:1px dashed var(--line);border-radius:8px;background:transparent;
+  font:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;
+  transition:background .15s ease;
+}
+.loc-detail-toggle:hover{background:var(--white);}
+.loc-detail-opt{font-weight:400;color:var(--ink-soft);}
+.loc-detail-arrow{font-size:12px;color:var(--ink-soft);transition:transform .2s ease;}
+.loc-detail-arrow.open{transform:rotate(180deg);}
+.loc-detail{max-height:0;overflow:hidden;opacity:0;transition:max-height .25s ease, opacity .2s ease;}
+.loc-detail.open{max-height:420px;opacity:1;}
+.loc-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;padding-top:2px;}
+
+@media (max-width:560px){
+  .loc-section{padding:12px;}
+  .loc-grid,.loc-detail-grid{grid-template-columns:1fr;}
+  .loc-head{flex-wrap:wrap;}
+}
+
+
+/* ---- ikon dropdown (SVG) & ikon label Kotak Masuk yang diseragamkan ---- */
+.custom-select-btn .custom-select-arrow{width:14px;height:14px;}
+.custom-select-option .custom-select-check{width:14px;height:14px;flex:none;}
+.mail-label .icon-fit{width:20px;height:20px;flex:none;}
+.mail-label{gap:12px;}
+.mail-star .icon-fit{width:18px;height:18px;}
+.icon-fit.notif-empty-icon{width:34px;height:34px;}
+
+
+/* ---- tombol Edit profil di kartu profil + baris aksi form edit ---- */
+.profile-edit-btn{
+  flex:none;align-self:flex-start;margin-left:auto;
+  padding:8px 14px;font-size:13px;gap:8px;
+}
+.profile-edit-btn .icon-img{width:16px;height:16px;margin:0;}
+.profile-edit-btn.is-active{background:var(--ink);border-color:var(--ink);color:var(--white);}
+.edit-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+@media (max-width:560px){
+  .profile-edit-btn{margin-left:0;width:100%;justify-content:center;}
+  .edit-actions .btn{flex:1;justify-content:center;}
+}
+
+
+/* ---- header email di paling atas menu titik-tiga ---- */
+.account-menu-head{
+  display:flex;flex-direction:column;gap:2px;min-width:0;
+  padding:6px 10px 3px;
+}
+.account-menu-head-label{
+  font-size:10px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-soft);
+}
+.account-menu-head-email{
+  font-size:12.5px;font-weight:600;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+
+/* ============ Dashboard Printing: kartu status, statistik, judul section ============ */
+.work-card{
+  display:flex;align-items:center;justify-content:space-between;gap:16px 20px;flex-wrap:wrap;
+  transition:background .25s ease,border-color .25s ease;
+}
+.work-card.is-on{
+  background:linear-gradient(135deg,rgba(59,122,87,.16),rgba(59,122,87,.04)),var(--white);
+  border-color:rgba(59,122,87,.5);
+}
+.work-info{display:flex;align-items:center;gap:14px;min-width:0;flex:1 1 300px;}
+.work-dot{position:relative;width:14px;height:14px;border-radius:50%;background:var(--ink-soft);flex-shrink:0;}
+.work-card.is-on .work-dot{background:#3B7A57;}
+.work-card.is-on .work-dot::after{
+  content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid #3B7A57;
+  animation:workPulse 1.6s ease-out infinite;
+}
+@keyframes workPulse{from{transform:scale(.7);opacity:.7;}to{transform:scale(1.7);opacity:0;}}
+.work-title{font-size:18px;font-weight:700;margin-bottom:2px;}
+.work-btn{
+  flex-shrink:0;border:1.5px solid var(--ink);background:var(--ink);color:#fff;
+  padding:12px 26px;border-radius:999px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;
+  transition:transform .15s ease,background .2s ease,color .2s ease;
+}
+.work-btn:hover{transform:translateY(-1px);}
+.work-btn:active{transform:scale(.97);}
+.work-btn.on{background:transparent;color:var(--ink);border-color:var(--line);}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 20px;}
+.stat-tile{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;}
+.stat-label{font-size:12px;font-weight:600;color:var(--ink-soft);}
+.stat-value{font-size:22px;font-weight:700;margin-top:2px;overflow-wrap:anywhere;}
+.stat-tile.is-accent{background:var(--ink);border-color:var(--ink);color:#fff;}
+.stat-tile.is-accent .stat-label{color:var(--paper-2);}
+.section-title{display:flex;align-items:center;gap:8px;}
+.count-pill{
+  display:inline-block;min-width:22px;padding:1px 8px;border-radius:999px;
+  background:var(--paper);color:var(--ink-soft);font-size:12px;font-weight:700;text-align:center;
+}
+.section-attn.has-items{border-color:var(--stamp);box-shadow:0 0 0 3px rgba(196,61,61,.08);}
+.section-attn.has-items .count-pill{background:var(--stamp);color:#fff;}
+@media (prefers-reduced-motion:reduce){.work-card.is-on .work-dot::after{animation:none;}}
+
+
+/* ============ Komunitas (community.html & channel.html) — tampilan baru ============ */
+.comm-hero{
+  display:flex;align-items:center;justify-content:space-between;gap:18px 28px;flex-wrap:wrap;
+  padding:26px 28px;margin-bottom:18px;border-radius:16px;color:#fff;
+  background:radial-gradient(circle at 92% 0%,rgba(212,162,76,.38),transparent 46%),linear-gradient(135deg,#1B2A4A,#2D4373);
+  box-shadow:0 10px 26px rgba(27,42,74,.18);
+}
+.comm-hero-text{min-width:0;flex:1 1 280px;}
+.comm-hero .eyebrow{color:var(--gold);}
+.comm-hero h1{color:#fff;margin:4px 0 6px;}
+.comm-hero .sub{color:var(--paper-2);margin:0;}
+.comm-hero-side{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.comm-hero-stat{display:flex;flex-direction:column;align-items:center;line-height:1.1;padding:8px 18px;border-radius:12px;background:rgba(255,255,255,.12);}
+.comm-hero-stat span{font-size:26px;font-weight:700;}
+.comm-hero-stat small{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--paper-2);}
+.comm-hero-btn{
+  display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border:0;border-radius:999px;cursor:pointer;
+  background:#fff;color:var(--ink);font:inherit;font-size:14px;font-weight:700;
+  transition:transform .15s ease,box-shadow .15s ease;
+}
+.comm-hero-btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.25);}
+.comm-hero-btn .icon-img{width:16px;height:16px;margin:0;}
+
+.channel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;}
+.channel-card{
+  display:flex;flex-direction:column;gap:10px;padding:18px;background:var(--white);
+  border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink);
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.channel-card:hover{transform:translateY(-3px);border-color:var(--ink);box-shadow:0 10px 22px rgba(27,42,74,.12);}
+.channel-card-top{display:flex;align-items:center;gap:12px;min-width:0;}
+.channel-card-top .channel-card-name{font-size:16px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.channel-card .channel-card-desc{
+  margin:0;min-height:38px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.channel-card-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:10px;border-top:1px solid var(--line);}
+.channel-card-foot .job-meta{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.channel-open-pill{flex-shrink:0;font-size:12px;font-weight:700;padding:4px 12px;border-radius:999px;background:var(--paper);transition:background .15s ease,color .15s ease;}
+.channel-card:hover .channel-open-pill{background:var(--ink);color:#fff;}
+.comm-empty{grid-column:1/-1;}
+.modal-hero-icon{
+  width:52px;height:52px;border-radius:50%;margin-bottom:10px;display:flex;align-items:center;justify-content:center;
+  background:var(--ink);color:#fff;font-family:var(--mono);font-weight:700;font-size:22px;
+}
+
+/* ruang obrolan */
+.channel-hero{
+  padding:22px 24px;border-bottom:0;border-radius:16px;margin-bottom:16px;
+  background:radial-gradient(circle at 95% 0%,rgba(212,162,76,.16),transparent 45%),var(--white);
+  border:1px solid var(--line);
+}
+.channel-hero .channel-hash-icon.lg{width:72px;height:72px;font-size:28px;box-shadow:0 0 0 4px var(--paper),0 0 0 5px var(--line);}
+.channel-msgs{
+  gap:4px;padding:16px 14px;border-radius:12px;
+  background-color:var(--paper);
+  background-image:radial-gradient(rgba(27,42,74,.07) 1px,transparent 1px);background-size:18px 18px;
+}
+.chat-bubble-row{max-width:78%;margin-top:8px;}
+.chat-bubble-row.is-grouped{margin-top:0;}
+.chat-avatar-spacer{width:42px;flex-shrink:0;}
+.chat-bubble{border-radius:16px;box-shadow:0 1px 2px rgba(27,42,74,.08);}
+.chat-bubble-row.is-theirs .chat-bubble{border-bottom-left-radius:5px;}
+.chat-bubble-row.is-mine .chat-bubble{border-bottom-right-radius:5px;background:linear-gradient(135deg,#1B2A4A,#2D4373);}
+.chat-bubble-row.is-grouped.is-theirs .chat-bubble{border-top-left-radius:5px;}
+.chat-bubble-row.is-grouped.is-mine .chat-bubble{border-top-right-radius:5px;}
+.chat-day-divider{display:flex;align-items:center;justify-content:center;margin:14px 0 6px;}
+.chat-day-divider span{font-size:11px;font-weight:600;color:var(--ink-soft);background:var(--white);border:1px solid var(--line);padding:3px 12px;border-radius:999px;}
+.chat-empty{margin:auto;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;color:var(--ink-soft);}
+.chat-empty-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--white);border:1px solid var(--line);box-shadow:0 6px 14px rgba(27,42,74,.08);font-family:var(--mono);font-size:26px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.chat-empty strong{color:var(--ink);font-size:15px;}
+.channel-chat-box .chat-input-row{gap:10px;}
+.channel-chat-box .chat-input-row input{border-radius:999px;padding:12px 18px;background:var(--paper);border-color:transparent;}
+.channel-chat-box .chat-input-row input:focus{outline:2px solid var(--ink);background:var(--white);}
+.channel-send-btn{border-radius:999px;padding-left:22px;padding-right:22px;}
+@media (max-width:640px){
+  .comm-hero{padding:20px;}
+  .chat-bubble-row{max-width:90%;}
+}
+
+
+/* ===================================================================
+   Komunitas v2 — tampilan lebih hidup (community.html & channel.html)
+   Warna tiap channel (--ch) diturunkan dari namanya di JS, dipakai buat
+   banner kartu & header ruang obrolan.
+   =================================================================== */
+
+/* ---- hero daftar channel ---- */
+.comm-hero{position:relative;overflow:hidden;isolation:isolate;}
+.comm-hero::before{
+  content:"";position:absolute;inset:0;z-index:-1;opacity:.5;
+  background-image:radial-gradient(rgba(255,255,255,.14) 1px,transparent 1px);background-size:20px 20px;
+  -webkit-mask-image:linear-gradient(100deg,transparent 30%,#000);mask-image:linear-gradient(100deg,transparent 30%,#000);
+}
+.comm-hero-hash{
+  position:absolute;right:-6px;bottom:-48px;z-index:-1;pointer-events:none;
+  font-family:var(--mono);font-weight:700;font-size:190px;line-height:1;color:rgba(255,255,255,.07);
+  transform:rotate(-8deg);
+}
+.comm-hero h1{font-size:clamp(24px,4vw,32px);letter-spacing:-.01em;}
+
+/* ---- toolbar: cari + urutkan ---- */
+.comm-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px;}
+.comm-search{position:relative;flex:1 1 240px;min-width:0;}
+.comm-search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--ink-soft);pointer-events:none;}
+.comm-search input{
+  width:100%;padding:12px 16px 12px 44px;border:1px solid var(--line);border-radius:999px;
+  background:var(--white);color:var(--ink);font-family:var(--sans);font-size:14.5px;
+  transition:box-shadow .15s ease,border-color .15s ease;
+}
+.comm-search input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(27,42,74,.12);}
+/* dropdown urutan (custom-select) — bentuk pil, sejajar dengan kolom cari */
+.comm-sort-wrap{flex:none;}
+.comm-sort-dd{width:208px;}
+.comm-sort-dd .custom-select-btn{padding:12px 16px;border-radius:999px;font-size:14px;font-weight:600;}
+.comm-sort-dd .custom-select-menu{left:auto;right:0;min-width:100%;width:max-content;max-width:min(280px,86vw);}
+.comm-result-note{margin:8px 4px 12px;min-height:18px;font-size:12.5px;color:var(--ink-soft);}
+.comm-result-note:empty{min-height:0;margin:0 0 12px;}
+
+/* ---- kartu channel ---- */
+.channel-grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.channel-card{padding:0;gap:0;overflow:hidden;border-radius:16px;min-width:0;}
+.channel-card:hover{border-color:var(--ch,var(--ink));box-shadow:0 14px 28px rgba(27,42,74,.14);}
+.channel-card-banner{
+  position:relative;height:64px;overflow:hidden;
+  background:linear-gradient(135deg,var(--ch,#1B2A4A),color-mix(in srgb,var(--ch,#1B2A4A) 55%,#000));
+}
+.channel-card-banner::after{
+  content:"";position:absolute;inset:0;opacity:.35;
+  background-image:radial-gradient(rgba(255,255,255,.35) 1px,transparent 1px);background-size:14px 14px;
+}
+.channel-card-banner-hash{
+  position:absolute;right:14px;top:-14px;z-index:1;font-family:var(--mono);font-weight:700;font-size:78px;line-height:1;
+  color:rgba(255,255,255,.18);transform:rotate(8deg);transition:transform .25s ease;
+}
+.channel-card:hover .channel-card-banner-hash{transform:rotate(0) scale(1.08);}
+.channel-card-body{display:flex;flex-direction:column;gap:6px;padding:0 18px 16px;flex:1;min-width:0;}
+.channel-card-top{margin-top:-24px;display:flex;align-items:flex-end;justify-content:space-between;gap:8px;position:relative;z-index:2;}
+.channel-card-avatar{width:52px;height:52px;border:3px solid var(--white);box-shadow:0 4px 10px rgba(27,42,74,.2);font-size:18px;}
+.channel-new-badge{
+  align-self:flex-start;margin-top:30px;padding:2px 9px;border-radius:999px;background:var(--stamp);color:#fff;
+  font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+}
+.channel-card .channel-card-name{
+  margin-top:6px;font-size:16.5px;font-weight:700;line-height:1.3;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:normal;overflow-wrap:anywhere;
+}
+.channel-card .channel-card-desc{margin:0;line-height:1.45;min-height:2.9em;max-height:2.9em;}
+.channel-card-foot{margin-top:10px;}
+.channel-card:hover .channel-open-pill{background:var(--ch,var(--ink));}
+
+/* ---- kondisi kosong ---- */
+.comm-empty{
+  grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;
+  padding:44px 20px;border:1px solid var(--line);border-radius:16px;color:var(--ink-soft);
+  background:linear-gradient(180deg,var(--white),rgba(255,255,255,.6));box-shadow:0 6px 18px rgba(27,42,74,.06);
+}
+.comm-empty strong{color:var(--ink);font-size:17px;}
+.comm-empty-icon{
+  width:68px;height:68px;border-radius:50%;margin-bottom:8px;display:flex;align-items:center;justify-content:center;
+  background:var(--paper);border:1px solid var(--line);font-family:var(--mono);font-weight:700;font-size:28px;color:var(--ink);
+}
+
+/* ---- modal buat channel ---- */
+.modal-hero-icon{
+  width:56px;height:56px;font-size:24px;
+  background:linear-gradient(135deg,#1B2A4A,#3F6FB5);box-shadow:0 8px 18px rgba(27,42,74,.25);
+}
+
+/* ---- header ruang obrolan ---- */
+.channel-hero{
+  position:relative;overflow:hidden;isolation:isolate;padding:0;margin-top:14px;
+  align-items:flex-end;background:var(--white);border:1px solid var(--line);
+  box-shadow:0 8px 22px rgba(27,42,74,.08);
+}
+.channel-hero-banner{
+  position:absolute;left:0;right:0;top:0;height:78px;z-index:-1;overflow:hidden;
+  background:linear-gradient(135deg,var(--ch,#1B2A4A),color-mix(in srgb,var(--ch,#1B2A4A) 55%,#000));
+}
+.channel-hero-banner::after{
+  content:"";position:absolute;inset:0;opacity:.3;
+  background-image:radial-gradient(rgba(255,255,255,.4) 1px,transparent 1px);background-size:16px 16px;
+}
+.channel-hero-banner span{
+  position:absolute;right:22px;top:-26px;font-family:var(--mono);font-weight:700;font-size:130px;line-height:1;
+  color:rgba(255,255,255,.16);transform:rotate(8deg);
+}
+/* Teks (nama & deskripsi) mulai di bawah banner supaya selalu terbaca,
+   foto channel dinaikkan separuh menimpa banner. */
+.channel-hero .channel-head-identity{padding:92px 24px 20px;align-items:flex-start;flex:1 1 320px;}
+.channel-hero #channelAvatarWrap{display:block;flex-shrink:0;margin-top:-50px;line-height:0;}
+.channel-hero .channel-hash-icon.lg{
+  width:84px;height:84px;font-size:32px;border:4px solid var(--white);
+  box-shadow:0 8px 18px rgba(27,42,74,.22);
+}
+.channel-hero .eyebrow{display:inline-block;padding:2px 10px;border-radius:999px;background:rgba(27,42,74,.07);}
+.channel-hero h1{font-size:clamp(22px,4vw,28px);overflow-wrap:anywhere;}
+.channel-hero .channel-owner-actions{padding:0 24px 20px;align-self:flex-end;}
+.channel-back-link{
+  padding:6px 14px 6px 10px;border-radius:999px;background:var(--white);border:1px solid var(--line);
+  transition:border-color .15s ease,background .15s ease;
+}
+.channel-back-link:hover{border-color:var(--ink);background:var(--paper);}
+
+/* ---- kotak obrolan ---- */
+.channel-chat-box{border-radius:16px;box-shadow:0 8px 22px rgba(27,42,74,.08);}
+.channel-msgs{min-height:52vh;max-height:calc(100vh - 340px);scroll-behavior:smooth;}
+.channel-chat-box .chat-input-row{
+  padding:6px;margin-top:14px;background:var(--paper);border-radius:999px;align-items:center;
+  border:1px solid var(--line);transition:box-shadow .15s ease,border-color .15s ease;
+}
+.channel-chat-box .chat-input-row:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px rgba(27,42,74,.12);background:var(--white);}
+.channel-chat-box .chat-input-row input{background:transparent;border:0;padding:10px 14px;min-width:0;}
+.channel-chat-box .chat-input-row input:focus{outline:none;background:transparent;}
+.channel-send-btn{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;}
+.channel-send-btn .send-icon{display:none;}
+
+/* ---- HP: komunitas ---- */
+@media (max-width:640px){
+  .comm-hero{padding:22px 18px;}
+  .comm-hero-hash{font-size:140px;bottom:-34px;}
+  .comm-hero-side{width:100%;justify-content:space-between;}
+  .comm-hero-btn{flex:1;justify-content:center;}
+  .comm-toolbar{gap:8px;}
+  .comm-sort-wrap{width:100%;}
+  .comm-sort-dd{width:100%;}
+  .comm-sort-dd .custom-select-menu{left:0;right:0;width:auto;max-width:none;}
+  .channel-grid{grid-template-columns:1fr;gap:12px;}
+
+  /* HP: foto channel menimpa banner di atas, nama & deskripsi turun ke
+     bawahnya (bukan bersebelahan), jadi judul panjang tidak menabrak banner. */
+  .channel-hero .channel-head-identity{flex-direction:column;align-items:flex-start;padding:30px 16px 14px;gap:10px;}
+  .channel-hero #channelAvatarWrap{margin-top:0;}
+  .channel-hero .channel-hash-icon.lg{width:68px;height:68px;font-size:26px;}
+  .channel-hero .channel-owner-actions{
+    width:100%;padding:0 16px 16px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+  }
+  .channel-hero .channel-owner-actions::-webkit-scrollbar{display:none;}
+  .channel-hero .channel-owner-actions .btn{white-space:nowrap;flex:0 0 auto;}
+  .channel-chat-box{padding:12px;}
+  .channel-msgs{min-height:50vh;max-height:calc(100dvh - 300px);padding:12px 8px;}
+  .channel-send-btn{width:42px;height:42px;padding:0;justify-content:center;}
+  .channel-send-btn .send-label{display:none;}
+  .channel-send-btn .send-icon{display:block;}
+}
+@media (prefers-reduced-motion:reduce){
+  .channel-card,.channel-card-banner-hash,.channel-msgs{transition:none;scroll-behavior:auto;}
+}
+
+
+/* ===================================================================
+   Build 0.4 — perbaikan tampilan mobile (HP)
+   Penyebab utama halaman "melebar" & teks numpuk: teks panjang tanpa spasi
+   (nama file, email, username) tidak mau dipatah, jadi memaksa lebar
+   halaman lebih besar dari layar dan semua isi ikut mengecil/terpotong.
+   =================================================================== */
+/* break-word di seluruh halaman: teks panjang tanpa spasi dipatah, tapi
+   kata pendek TIDAK dipatah huruf-per-huruf. "anywhere" cuma dipakai di
+   tempat yang isinya memang string panjang (nama file, email, username). */
+body{overflow-wrap:break-word;}
+.job-name,.job-meta,.notify-user-name,.notify-user-email,
+.printer-row-name,.pending-toast-filechip,.post-head h1,h1{
+  overflow-wrap:anywhere;
+}
+img,video,canvas,svg{max-width:100%;}
+.main-col > *{min-width:0;max-width:100%;}
+textarea,input,select{max-width:100%;}
+
+@media (max-width:600px){
+  /* Kelola User: identitas (avatar + nama + email) dapat baris sendiri
+     selebar penuh, baru tombol-tombolnya di baris bawahnya. */
+  .user-mgmt-row{gap:8px;}
+  .user-mgmt-identity{flex:1 1 100%;}
+  .user-mgmt-name,.user-mgmt-email{overflow-wrap:anywhere;}
+  .user-mgmt-row .btn{white-space:nowrap;}
+  .user-mgmt-role{width:auto;flex:1 1 130px;min-width:120px;}
+
+  /* Baris tombol aksi pesanan: di HP boleh turun ke baris berikutnya
+     daripada kepotong di kanan layar. Teks tombol tidak dipatah. */
+  .actions-row{flex-wrap:wrap;overflow-x:visible;}
+  .actions-row .btn{white-space:nowrap;}
+
+  /* Tombol di kartu profil (Berteman / Kirim pesan / Ikuti). */
+  #profileCard .btn{white-space:nowrap;}
+
+  /* Header channel: identitas tidak memaksa lebar minimum 320px. */
+  .channel-hero .channel-head-identity{flex-basis:100%;min-width:0;}
+}
+
+
+/* ---- Home: Panduan & Perbandingan ---- */
+/* Glow emas DI BELAKANG kartu pratinjau pesanan (bukan di pojok hero). */
+.landing-hero-visual{isolation:isolate;}
+.aud-toggle{display:flex;width:max-content;max-width:100%;margin:0 auto 28px;padding:4px;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;gap:4px;}
+.aud-toggle button{border:0;background:none;padding:9px 22px;border-radius:999px;font-family:var(--sans);font-size:14px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:background .18s,color .18s,transform .18s;}
+.aud-toggle button:hover{color:var(--ink);}
+.aud-toggle button.is-on{background:var(--ink);color:var(--white);box-shadow:0 4px 12px rgba(27,42,74,.25);}
+#panduan[data-aud="guest"] [data-pane="member"],#panduan[data-aud="member"] [data-pane="guest"]{display:none;}
+.aud-pane{max-width:900px;margin:0 auto;animation:audIn .35s ease;}
+@keyframes audIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.guide-h{font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--stamp);margin:26px 0 12px;}
+.qg{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:q;}
+.qg li{position:relative;display:flex;flex-direction:column;gap:6px;padding:20px 18px 18px;font-size:13.5px;color:var(--ink-soft);line-height:1.45;}
+.qg li b{font-size:15px;color:var(--ink);}
+.qg-n{width:34px;height:34px;border-radius:50%;background:var(--stamp);color:#fff;display:grid;place-items:center;font-family:var(--mono);font-weight:700;margin-bottom:4px;box-shadow:0 0 0 5px rgba(193,68,60,.14);}
+.gd{background:var(--white);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:box-shadow .18s;}
+.gd[open]{box-shadow:0 6px 18px rgba(27,42,74,.1);border-color:var(--gold);}
+.gd summary{cursor:pointer;list-style:none;padding:14px 18px;font-weight:600;font-size:14.5px;display:flex;justify-content:space-between;gap:12px;align-items:center;}
+.gd summary::-webkit-details-marker{display:none;}
+.gd summary::after{content:"+";font-family:var(--mono);font-size:20px;color:var(--stamp);transition:transform .2s;}
+.gd[open] summary::after{transform:rotate(45deg);}
+.gd p{margin:0;padding:0 18px 16px;font-size:13.5px;line-height:1.6;color:var(--ink-soft);}
+.aud-cta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:24px;}
+.cmp-wrap{max-width:900px;margin:0 auto;overflow-x:auto;border-radius:14px;border:1px solid var(--line);background:var(--white);}
+.cmp{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px;}
+.cmp th,.cmp td{padding:12px 14px;text-align:center;border-bottom:1px solid var(--paper-2);}
+.cmp th:first-child,.cmp td:first-child{text-align:left;font-weight:500;}
+.cmp thead th{background:var(--ink);color:var(--white);font-size:13px;position:sticky;top:0;}
+.cmp tbody tr:hover td{background:rgba(212,162,76,.08);}
+.cmp .you{display:none;margin-left:8px;padding:1px 8px;border-radius:99px;background:var(--gold);color:var(--ink);font-size:10.5px;font-weight:700;}
+body[data-me="guest"] th.cmp-g .you,body[data-me="member"] th.cmp-m .you{display:inline-block;}
+#perbandingan[data-aud="guest"] td.cmp-g,#perbandingan[data-aud="member"] td.cmp-m{font-weight:600;}
+.ck{display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+.ck.y,.ck.n{width:24px;height:24px;border-radius:50%;}
+.ck.y{background:#2E7D5B;color:#fff;}
+.ck.n{background:var(--paper-2);color:var(--ink-soft);}
+.ck.p{padding:3px 10px;border-radius:99px;background:rgba(212,162,76,.22);color:var(--ink);font-weight:600;line-height:1.3;}
+@media (max-width:760px){
+  .qg{grid-template-columns:1fr;}
+  .aud-toggle{width:100%;}.aud-toggle button{flex:1;padding:9px 10px;}
+}
+@media (prefers-reduced-motion:reduce){.aud-pane{animation:none;}}
+
+
+/* ===================================================================
+   Pesan (messages.html) — tampilan baru ala messenger.
+   Semua aturan di-scope ke .msg-page supaya halaman lain tidak berubah.
+   Layout: hero → tab pill → cari → kartu messenger (daftar | chat).
+   Desktop = 2 kolom; HP = satu layar (daftar ATAU chat, lihat conv-open).
+   =================================================================== */
+.msg-page{max-width:1100px;}
+.msg-page .ticket::before,.msg-page .ticket::after{display:none;}
+
+/* ---- hero ---- */
+.msg-hero{
+  position:relative;overflow:hidden;isolation:isolate;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  padding:26px 30px;margin-bottom:18px;border-radius:18px;color:#fff;
+  background:radial-gradient(circle at 92% 0%,rgba(212,162,76,.38),transparent 46%),linear-gradient(135deg,#1B2A4A,#2D4373);
+  box-shadow:0 10px 26px rgba(27,42,74,.18);
+}
+.msg-hero::before{
+  content:"";position:absolute;inset:0;z-index:-1;opacity:.5;
+  background-image:radial-gradient(rgba(255,255,255,.14) 1px,transparent 1px);background-size:20px 20px;
+  -webkit-mask-image:linear-gradient(100deg,transparent 30%,#000);mask-image:linear-gradient(100deg,transparent 30%,#000);
+}
+.msg-hero-text{min-width:0;}
+.msg-hero .eyebrow{color:var(--gold);margin:0;}
+.msg-hero h1{color:#fff;margin:4px 0 6px;font-size:clamp(24px,4vw,32px);letter-spacing:-.01em;}
+.msg-hero .sub{color:var(--paper-2);margin:0;}
+.msg-hero-art{width:120px;height:auto;flex:none;filter:drop-shadow(0 8px 14px rgba(0,0,0,.25));}
+
+/* ---- tab pill ---- */
+.msg-tabs{
+  display:inline-flex;gap:4px;padding:4px;margin:0 0 16px;
+  background:var(--white);border:1px solid var(--line);border-radius:999px;
+}
+.msg-page .msg-tab{
+  border:0;border-radius:999px;padding:9px 20px;font-size:14px;
+  color:var(--ink-soft);gap:8px;transition:background .15s ease,color .15s ease;
+}
+.msg-page .msg-tab:hover{color:var(--ink);}
+.msg-page .msg-tab.active{background:var(--ink);color:#fff;}
+.msg-page .msg-tab .badge{background:var(--stamp);color:#fff;}
+
+/* ---- kolom cari ---- */
+.msg-search{margin-bottom:16px;}
+.msg-search-icon{position:absolute;left:16px;top:22px;transform:translateY(-50%);color:var(--ink-soft);pointer-events:none;}
+.msg-page .msg-search input{
+  padding:12px 18px 12px 46px;border-radius:999px;font-size:14.5px;
+  border:1px solid var(--line);background:var(--white);
+  transition:box-shadow .15s ease,border-color .15s ease;
+}
+.msg-page .msg-search input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 3px rgba(27,42,74,.12);}
+.msg-page .search-results{
+  position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;margin:0;
+  max-height:320px;overflow-y:auto;padding:6px;
+  background:var(--white);border:1px solid var(--line);border-radius:16px;
+  box-shadow:0 16px 32px rgba(27,42,74,.16);
+}
+.msg-page .search-result-item{padding:9px 12px;border-radius:12px;gap:12px;font-weight:600;}
+.msg-page .search-result-item:hover{background:var(--paper);}
+.msg-page .search-results .empty-state{padding:18px 12px;}
+
+/* ---- kartu messenger ---- */
+.msg-page .msg-shell{
+  display:grid;grid-template-columns:330px minmax(0,1fr);gap:0;align-items:stretch;
+  height:clamp(480px,calc(100dvh - 340px),760px);
+  background:var(--white);border:1px solid var(--line);border-radius:20px;overflow:hidden;
+  box-shadow:0 12px 30px rgba(27,42,74,.09);
+}
+.msg-side{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line);background:var(--white);}
+.msg-side-head{
+  padding:16px 20px 8px;font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);
+}
+.msg-page .chat-list{
+  flex:1;min-height:0;max-height:none;height:auto;overflow-y:auto;
+  padding:4px 10px 12px;margin:0;border:0;border-radius:0;background:none;
+}
+.msg-page .conv-item{
+  padding:11px 12px;border-radius:14px;gap:12px;margin-bottom:2px;
+  transition:background .15s ease;
+}
+.msg-page .conv-item:hover{background:var(--paper);}
+.msg-page .conv-item.active{background:var(--paper-2);box-shadow:inset 3px 0 0 var(--stamp);font-weight:600;}
+.msg-page .conv-item .avatar-circle{border:2px solid var(--white);box-shadow:0 0 0 1px var(--line);}
+.msg-page .conv-item-name{font-size:14.5px;}
+.msg-page .conv-item .conv-preview{font-size:13px;margin-top:2px;}
+
+/* panel chat */
+.msg-page .chat-pane{
+  display:flex;flex-direction:column;min-width:0;min-height:0;height:auto;padding:0;
+  background:#F4F6FA radial-gradient(rgba(27,42,74,.06) 1px,transparent 1px) 0 0/20px 20px;
+}
+.msg-pane-top{display:flex;align-items:center;background:var(--white);}
+.msg-page .chat-header{
+  flex:1;min-width:0;margin:0;padding:12px 20px;border-bottom:1px solid var(--line);
+}
+.msg-page .chat-header:empty{display:none;}
+.msg-page .chat-header-identity{gap:12px;}
+.msg-page .chat-header-identity:hover{text-decoration:none;}
+.msg-page .chat-header-text{display:flex;flex-direction:column;line-height:1.25;min-width:0;}
+.msg-page .chat-header-text b{font-size:15.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.msg-page .chat-header-text small{font-size:12px;font-weight:500;color:var(--ink-soft);}
+.msg-page .chat-header-identity:hover small{color:var(--stamp);}
+.msg-page .chat-messages{flex:1;min-height:0;gap:0;padding:18px 22px;scroll-behavior:smooth;}
+.msg-page .chat-messages .chat-bubble-row{max-width:72%;}
+.msg-page .chat-messages .chat-bubble-row.is-grouped{margin-top:3px;}
+.msg-page .chat-bubble{padding:9px 13px;font-size:14.5px;line-height:1.45;overflow-wrap:anywhere;}
+
+/* kotak tulis pesan */
+.msg-page .chat-input-row{
+  margin:0;padding:12px 16px;gap:10px;align-items:center;
+  background:var(--white);border-top:1px solid var(--line);
+}
+.msg-page .chat-input-row input{
+  flex:1;min-width:0;padding:12px 18px;border:1px solid transparent;border-radius:999px;
+  background:var(--paper);font-size:14.5px;transition:box-shadow .15s ease,background .15s ease;
+}
+.msg-page .chat-input-row input:focus{outline:none;background:var(--white);border-color:var(--ink);box-shadow:0 0 0 3px rgba(27,42,74,.12);}
+.msg-page .msg-send{border-radius:999px;padding:11px 20px;gap:8px;flex:none;}
+.msg-page .msg-send svg{flex:none;}
+
+/* keadaan kosong bergambar */
+.msg-empty{
+  margin:auto;max-width:300px;padding:28px 18px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--ink-soft);font-size:13.5px;line-height:1.5;
+}
+.msg-empty-icon{
+  width:72px;height:72px;border-radius:50%;display:grid;place-items:center;margin-bottom:6px;
+  color:var(--ink);background:linear-gradient(135deg,#fff,var(--paper-2));
+  border:1px dashed var(--line);box-shadow:0 8px 18px rgba(27,42,74,.08);
+}
+.msg-empty strong{color:var(--ink);font-size:16px;}
+.msg-card .msg-empty{padding:22px 10px;}
+
+/* ---- tab Teman ---- */
+.msg-page .msg-card{border-radius:18px;padding:20px 22px;box-shadow:0 6px 18px rgba(27,42,74,.06);margin-bottom:18px;}
+.msg-card-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.msg-card-head h2{margin:0;font-size:16px;}
+.msg-card-sub{margin:2px 0 0;font-size:13px;color:var(--ink-soft);line-height:1.45;}
+.msg-card-icon{
+  width:42px;height:42px;border-radius:13px;flex:none;display:grid;place-items:center;
+  background:var(--paper);color:var(--ink);
+}
+.msg-card-icon.is-stamp{background:#F9E7E5;color:var(--stamp);}
+.msg-page .add-friend-input{border-radius:999px;background:var(--paper);border-color:transparent;}
+.msg-page .add-friend-input:focus-within{outline:none;background:var(--white);border-color:var(--ink);box-shadow:0 0 0 3px rgba(27,42,74,.12);}
+.msg-page .add-friend-at{padding-left:18px;}
+.msg-page .add-friend-input input{padding:12px 16px 12px 4px;}
+.msg-page .add-friend-row .btn{border-radius:999px;padding-left:22px;padding-right:22px;}
+.msg-friends-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start;}
+.msg-friends-grid .msg-card{margin-bottom:0;min-width:0;}
+
+.msg-page .friend-row{padding:10px;border-bottom:0;border-radius:14px;transition:background .15s ease;}
+.msg-page .friend-row:hover{background:var(--paper);}
+.msg-page .friend-row-info{min-width:0;flex:1;gap:12px;}
+.msg-page .friend-row-name{
+  display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:14.5px;font-weight:600;color:var(--ink);text-decoration:none;
+}
+.msg-page a.friend-row-name:hover{color:var(--stamp);}
+.msg-page .friend-row-name small{display:block;font-size:12px;font-weight:400;color:var(--ink-soft);}
+.msg-page .friend-row-actions{flex:none;}
+.msg-page .friend-row .btn{border-radius:999px;padding:7px 14px;}
+.msg-page .friend-row .avatar-circle{border:2px solid var(--white);box-shadow:0 0 0 1px var(--line);}
+
+/* ---- ukuran mengikuti lebar AREA KONTEN (bukan layar), jadi tablet yang
+   sidebarnya masih tampil juga dapat tampilan satu-layar yang lega. ---- */
+.msg-page{container-type:inline-size;container-name:msgpage;}
+
+@container msgpage (max-width:880px){
+  .msg-page .msg-shell{grid-template-columns:260px minmax(0,1fr);}
+  .msg-friends-grid{grid-template-columns:minmax(0,1fr);}
+}
+
+/* Sempit (HP / tablet berdampingan sidebar): satu layar, daftar ATAU chat */
+@container msgpage (max-width:700px){
+  .msg-page .msg-shell{
+    display:block;height:calc(100dvh - 330px);min-height:420px;border-radius:18px;
+  }
+  .msg-page .msg-shell .msg-side{height:100%;border-right:0;}
+  .msg-page .msg-shell .chat-pane{display:none;height:100%;}
+  .msg-page .msg-shell.conv-open .msg-side{display:none;}
+  .msg-page .msg-shell.conv-open .chat-pane{display:flex;}
+
+  .msg-page .chat-back-btn{
+    display:inline-flex;align-items:center;justify-content:center;flex:none;
+    width:40px;height:40px;margin:0 0 0 10px;padding:0;border:0;border-radius:50%;
+    background:var(--paper);color:var(--ink);cursor:pointer;
+  }
+  .msg-page .msg-pane-top{border-bottom:1px solid var(--line);}
+  .msg-page .chat-header{border-bottom:0;padding:10px 14px 10px 10px;}
+  .msg-page .chat-messages{padding:14px 12px;}
+  .msg-page .chat-messages .chat-bubble-row{max-width:86%;}
+  .msg-page .chat-input-row{padding:10px 12px;}
+  .msg-page .msg-send{width:46px;height:46px;padding:0;justify-content:center;}
+  .msg-page .msg-send-text{display:none;}
+
+  /* Chat terbuka = fokus ke obrolan: sembunyikan hero, tab & cari. */
+  .msg-page:has(.msg-shell.conv-open) .msg-hero,
+  .msg-page:has(.msg-shell.conv-open) .msg-tabs,
+  .msg-page:has(.msg-shell.conv-open) .msg-search,
+  .msg-page:has(.msg-shell.conv-open) .guest-lock-banner{display:none;}
+  .msg-page .msg-shell.conv-open{height:calc(100dvh - 120px);min-height:380px;}
+}
+
+/* ---- HP: hero, tab, kartu Teman ---- */
+@media (max-width:640px){
+  .msg-hero{padding:20px 18px;border-radius:16px;margin-bottom:14px;}
+  .msg-hero-art{width:84px;}
+  .msg-tabs{display:flex;width:100%;}
+  .msg-page .msg-tab{flex:1;justify-content:center;padding:10px 12px;}
+  .msg-page .msg-card{padding:16px;}
+}
+@media (max-width:480px){
+  /* nama teman dikasih ruang penuh, tombol turun ke bawahnya */
+  .msg-page .friend-row{flex-wrap:wrap;padding:10px 6px;row-gap:8px;}
+  .msg-page .friend-row-info{flex:1 1 100%;}
+  .msg-page .friend-row-actions{width:100%;padding-left:54px;}
+}
+@media (max-width:420px){
+  .msg-hero-art{display:none;}
+}
+@media (prefers-reduced-motion:reduce){
+  .msg-page .chat-messages{scroll-behavior:auto;}
+}
+
+
+/* =====================================================================
+   HALAMAN LOGIN / DAFTAR — logo besar di atas nama, latar & kartu lebih hidup
+   ===================================================================== */
+.auth-page{position:relative;overflow-x:hidden;
+  background:
+    radial-gradient(circle at 1px 1px, rgba(27,42,74,.07) 1px, transparent 0) 0 0/22px 22px,
+    linear-gradient(180deg,#F4F6FA 0%,var(--paper) 55%,var(--paper-2) 100%);
+}
+.auth-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.auth-blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;}
+.auth-blob-2{width:380px;height:380px;background:rgba(27,42,74,.22);bottom:-140px;right:-100px;}
+.auth-blob-3{width:240px;height:240px;background:rgba(193,68,60,.22);top:42%;right:12%;}
+.auth-page .center-screen{position:relative;z-index:1;padding:28px 20px 40px;}
+.auth-shell{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:stretch;}
+
+.auth-brand{display:flex;flex-direction:column;align-items:center;text-align:center;
+  text-decoration:none;margin:4px 0 26px;animation:authRise .5s cubic-bezier(.2,.8,.3,1) both;}
+.auth-logo-wrap{position:relative;display:inline-flex;margin-bottom:14px;}
+.auth-logo-wrap::before{content:"";position:absolute;inset:-14px;border-radius:32px;
+  background:radial-gradient(circle,rgba(212,162,76,.55) 0%,rgba(212,162,76,0) 70%);
+  filter:blur(8px);z-index:0;}
+.auth-logo{position:relative;z-index:1;width:104px;height:104px;border-radius:26px;object-fit:contain;
+  box-shadow:0 14px 30px -10px rgba(27,42,74,.55),0 2px 0 rgba(255,255,255,.4) inset;
+  animation:authFloat 4.5s ease-in-out infinite;}
+.auth-brand-name{font-family:var(--mono);font-weight:700;font-size:28px;letter-spacing:.08em;color:var(--ink);line-height:1.1;}
+.auth-brand-tag{margin-top:6px;font-size:13px;color:var(--ink-soft);}
+
+.auth-card{margin-bottom:18px;padding:30px 28px 26px;overflow:visible;
+  border-radius:16px;border-color:rgba(27,42,74,.12);
+  box-shadow:0 24px 50px -24px rgba(27,42,74,.35),0 4px 12px -6px rgba(27,42,74,.12);
+  animation:authRise .55s .08s cubic-bezier(.2,.8,.3,1) both;}
+.auth-card::before,.auth-card::after{background:var(--paper);}
+/* strip warna tipis di atas kartu */
+.auth-card > .eyebrow:first-child{position:relative;}
+.auth-card{background-image:linear-gradient(90deg,var(--stamp) 0 34%,var(--gold) 34% 67%,var(--ink) 67% 100%);
+  background-size:100% 4px;background-repeat:no-repeat;background-color:var(--white);}
+.auth-card h1{letter-spacing:-.01em;}
+.auth-card input{transition:border-color .15s ease, box-shadow .15s ease, background .15s ease;}
+.auth-card input:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 4px rgba(27,42,74,.12);}
+.auth-card .btn-primary{background:linear-gradient(135deg,#243a66 0%,var(--ink) 100%);
+  box-shadow:0 10px 20px -10px rgba(27,42,74,.7);transition:transform .12s ease,box-shadow .15s ease;}
+.auth-card .btn-primary:hover{transform:translateY(-1px);box-shadow:0 14px 24px -10px rgba(27,42,74,.75);}
+.auth-card .btn-primary:active{transform:translateY(0);}
+
+
+@keyframes authRise{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes authFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@media (max-width:480px){
+  .auth-logo{width:88px;height:88px;border-radius:22px;}
+  .auth-brand-name{font-size:24px;}
+  .auth-card{padding:26px 20px 22px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .auth-logo,.auth-brand,.auth-card{animation:none;}
+}
+
+/* =====================================================================
+   BANNER "Upload Sekarang" (home) — ditambah logo web
+   ===================================================================== */
+.landing-cta-banner .cta-main{display:flex;align-items:center;gap:20px;min-width:0;flex:1 1 320px;}
+.landing-cta-banner .cta-logo{width:76px;height:76px;flex:none;border-radius:19px;object-fit:contain;
+  box-shadow:0 0 0 3px rgba(255,255,255,.12),0 12px 24px -10px rgba(0,0,0,.6);background:var(--ink);}
+/* judul sebelumnya ikut warna --ink sehingga tidak terbaca di latar navy */
+.landing-cta-banner .landing-h2{color:var(--white);}
+@media (max-width:560px){
+  .landing-cta-banner .cta-main{flex-direction:column;align-items:flex-start;gap:14px;}
+  .landing-cta-banner .cta-logo{width:64px;height:64px;border-radius:16px;}
+}
+
+/* ---- tombol "Kembali ke Upload" di bawah kartu login/daftar ---- */
+.auth-upload-btn{
+  display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--white);
+  background:linear-gradient(135deg,#243a66 0%,var(--ink) 100%);
+  border-radius:14px;padding:14px 18px;position:relative;overflow:hidden;
+  box-shadow:0 16px 28px -14px rgba(27,42,74,.7);
+  transition:transform .15s ease,box-shadow .2s ease;
+  animation:authRise .6s .16s cubic-bezier(.2,.8,.3,1) both;
+}
+.auth-upload-btn::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.14) 50%,transparent 65%);
+  transform:translateX(-120%);transition:transform .6s ease;}
+.auth-upload-btn:hover{transform:translateY(-2px);box-shadow:0 20px 32px -14px rgba(27,42,74,.8);}
+.auth-upload-btn:hover::after{transform:translateX(120%);}
+.auth-upload-btn:active{transform:translateY(0);}
+.auth-upload-btn:focus-visible{outline:3px solid var(--gold);outline-offset:3px;}
+.auth-upload-ico{flex:none;width:42px;height:42px;border-radius:12px;background:var(--gold);
+  display:inline-flex;align-items:center;justify-content:center;color:var(--ink);}
+.auth-upload-ico .icon-img{width:20px;height:20px;display:block;transition:transform .2s ease;}
+.auth-upload-btn:hover .auth-upload-ico .icon-img{transform:translateX(-3px);}
+.auth-upload-text{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;}
+.auth-upload-text strong{font-family:var(--mono);font-size:15px;letter-spacing:.02em;}
+.auth-upload-text small{font-size:12px;color:var(--paper-2);opacity:.85;line-height:1.35;}
+@media (prefers-reduced-motion:reduce){.auth-upload-btn{animation:none;}.auth-upload-btn::after{display:none;}}
+
+/* =====================================================================
+   MODAL RECOVERY (menu titik-tiga sidebar > General > Recovery)
+   ===================================================================== */
+.recovery-box{max-width:460px;max-height:90vh;overflow-y:auto;}
+.recovery-sec-title{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--stamp);margin:0 0 8px;}
+.recovery-sep{border-top:1px solid var(--line);margin:18px 0;}
+.recovery-code-row{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap;}
+.recovery-code{flex:1;min-width:200px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-weight:600;font-size:15px;letter-spacing:.06em;color:var(--ink);
+  background:var(--white);border:1px solid var(--line);border-left:4px solid var(--ink);border-radius:8px;
+  box-shadow:0 2px 8px rgba(27,42,74,.07);padding:11px 12px;user-select:all;text-align:center;}
+.recovery-note{font-size:12.5px;color:var(--ink-soft);line-height:1.45;margin:8px 0 0 !important;}
+.recovery-note.is-warn{color:var(--stamp);}
+.recovery-input-row{display:flex;gap:8px;flex-wrap:wrap;}
+.recovery-input-row input{flex:1;min-width:180px;font-family:var(--mono);letter-spacing:.04em;}
+.recovery-list{border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.recovery-item{display:flex;align-items:center;gap:12px;padding:11px 14px;cursor:pointer;border-bottom:1px solid var(--line);background:var(--white);}
+.recovery-item:last-child{border-bottom:0;}
+.recovery-item:hover{background:var(--paper);}
+.recovery-item-text{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;}
+.recovery-item-title{font-weight:600;font-size:14px;color:var(--ink);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.recovery-item-desc{font-size:12.5px;color:var(--ink-soft);word-break:break-word;}
+.recovery-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:2px 8px;font-weight:600;}
+.recovery-tag.is-tambah{background:#E3F3E8;color:#1E7A45;}
+.recovery-tag.is-timpa{background:#FBE7E5;color:var(--stamp);}
+.recovery-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px;}
+.recovery-actions .btn:disabled{opacity:.5;cursor:not-allowed;}
+.recovery-item{margin:0 !important;font-weight:400;line-height:1.35;}
+.recovery-item .recovery-check{flex:none;margin:0;}
+.recovery-item-title{margin:0;}
+.recovery-item-desc{font-weight:400;}
+
+/* ---- Notice kode pemulihan tamu (login.html) & popup Recovery wajib ---- */
+.guest-code-notice{background:#FFF6E0;border:1px solid #F0D58A;border-radius:12px;padding:12px 14px;margin:0 0 16px;}
+.guest-code-notice-title{font-weight:700;font-size:14px;color:var(--ink);margin:0 0 6px;}
+.guest-code-notice .recovery-code-row{margin-top:2px;}
+.recovery-page-skip{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);}
+.recovery-page-skip button{background:none;border:0;padding:0;color:var(--ink-soft);font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;}
+
+/* Kotak centang (checkbox) biasa untuk pilihan data yang dipindah — bukan saklar on/off. */
+.recovery-check{appearance:none;-webkit-appearance:none;flex:none;width:20px;height:20px;min-width:20px;margin:0;padding:0;
+  border:2px solid var(--ink-soft);border-radius:5px;background:var(--white);cursor:pointer;display:inline-grid;place-content:center;
+  transition:background .15s,border-color .15s;}
+.recovery-check::after{content:"";width:5px;height:10px;border:solid var(--white);border-width:0 2.5px 2.5px 0;
+  transform:rotate(45deg) scale(0);margin-top:-2px;transition:transform .12s;}
+.recovery-check:checked{background:var(--ink);border-color:var(--ink);}
+.recovery-check:checked::after{transform:rotate(45deg) scale(1);}
+.recovery-check:disabled{opacity:.5;cursor:not-allowed;}
+.recovery-check:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+
+
+/* ---- Edit profil: kategori bisa dibuka/ditutup (accordion) ---- */
+.edit-sec{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:var(--white);overflow:hidden;}
+.edit-sec > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px;background:var(--paper);user-select:none;}
+.edit-sec > summary::-webkit-details-marker{display:none;}
+.edit-sec-title{font-size:14px;font-weight:700;color:var(--ink);}
+.edit-sec-arrow{color:var(--ink-soft);transition:transform .2s ease;}
+.edit-sec[open] > summary .edit-sec-arrow{transform:rotate(180deg);}
+.edit-sec[open] > summary{border-bottom:1px solid var(--line);}
+.edit-sec-body{padding:6px 16px 16px;}
+.edit-sec-body .loc-section{margin-top:12px;}
+.edit-photo{display:flex;align-items:center;gap:14px;margin:6px 0 4px;}
+.edit-photo .avatar-circle{width:72px;height:72px;}
+@media (max-width:640px){.edit-sec-body{padding:4px 12px 14px;}}
+.edit-sec-title{display:inline-flex;align-items:center;gap:8px;}
+
+
+/* Modal Switch account: kalau akunnya banyak, daftar discroll di dalam kotak
+   (judul & tombol Tutup tetap kelihatan, akun "Aktif" nempel di atas). */
+#switchAccountModal .modal-box{display:flex;flex-direction:column;max-height:88vh;max-height:88dvh;overflow:hidden;}
+#switchAccountModal .modal-box > *{flex-shrink:0;}
+#switchAccountModal .switch-list{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-right:4px;scrollbar-width:thin;scrollbar-color:var(--line) transparent;}
+#switchAccountModal .switch-list::-webkit-scrollbar{width:6px;}
+#switchAccountModal .switch-list::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px;}
+#switchAccountModal .switch-row.is-current{position:sticky;top:0;z-index:1;}
